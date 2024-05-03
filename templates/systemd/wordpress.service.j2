@@ -1,0 +1,46 @@
+[Unit]
+Description=Wordpress Server ({{ wordpress_identifier }})
+{% for service in wordpress_systemd_required_services_list %}
+Requires={{ service }}
+After={{ service }}
+{% endfor %}
+{% for service in wordpress_systemd_wanted_services_list %}
+Wants={{ service }}
+{% endfor %}
+DefaultDependencies=no
+
+[Service]
+Type=simple
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} stop --time={{ devture_systemd_docker_base_container_stop_grace_time_seconds }} {{ wordpress_identifier }} 2>/dev/null || true'
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm {{ wordpress_identifier }} 2>/dev/null || true'
+
+ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
+                --rm \
+                --name={{ wordpress_identifier }} \
+                --log-driver=none \
+                --user={{ wordpress_uid }}:{{ wordpress_gid }} \
+                --cap-drop=ALL \
+                {% if wordpress_container_http_host_bind_port %}
+                -p {{ wordpress_container_http_host_bind_port }}:{{ wordpress_container_http_port }} \
+                {% endif %}
+                --label-file={{ wordpress_config_path }}/labels \
+                --network={{ wordpress_container_network }} \
+                --mount type=bind,src={{ wordpress_data_path }},dst=/var/www/html \
+                --read-only \
+                --env-file={{ wordpress_env_path }} \
+                {{ wordpress_container_image }}
+
+{% for network in wordpress_container_additional_networks %}
+ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network connect {{ network }} {{ wordpress_identifier }}
+{% endfor %}
+
+ExecStart={{ devture_systemd_docker_base_host_command_docker }} start --attach {{ wordpress_identifier }}
+
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} stop --time={{ devture_systemd_docker_base_container_stop_grace_time_seconds }} {{ wordpress_identifier }} 2>/dev/null || true'
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm {{ wordpress_identifier }} 2>/dev/null || true'
+Restart=always
+RestartSec=30
+SyslogIdentifier={{ wordpress_identifier }}
+
+[Install]
+WantedBy=multi-user.target

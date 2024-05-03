@@ -1,0 +1,23 @@
+---
+
+- name: Check existence of wordpress systemd service
+  ansible.builtin.stat:
+    path: "{{ devture_systemd_docker_base_systemd_path }}/{{ wordpress_identifier }}.service"
+  register: wordpress_service_stat
+
+- when: wordpress_service_stat.stat.exists | bool
+  block:
+    - name: Ensure wordpress service is stopped
+      ansible.builtin.service:
+        name: "{{ wordpress_identifier }}"
+        state: stopped
+        daemon_reload: true
+    - name: Ensure wordpress service doesn't exist
+      ansible.builtin.file:
+        dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ wordpress_identifier }}.service"
+        state: absent
+
+    - name: Ensure wordpress base path is files deleted (make sure to delete node data)
+      ansible.builtin.file:
+        path: "{{ wordpress_base_path }}"
+        state: absent

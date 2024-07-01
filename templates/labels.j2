@@ -5,6 +5,11 @@ traefik.docker.network={{ wordpress_container_labels_traefik_docker_network }}
 
 {% set middlewares = [] %}
 
+{% if wordpress_container_labels_middleware_basic_auth_enabled %}
+{% set middlewares = middlewares + [wordpress_identifier + '-basic-auth'] %}
+traefik.http.middlewares.{{ wordpress_identifier }}-basic-auth.basicauth.users={{ wordpress_container_labels_middleware_basic_auth_users }}
+{% endif %}
+
 {% if wordpress_container_labels_traefik_additional_request_headers.keys() | length > 0 %}
 {% for name, value in wordpress_container_labels_traefik_additional_request_headers.items() %}
 traefik.http.middlewares.{{ wordpress_identifier }}-add-request-headers.headers.customrequestheaders.{{ name }}={{ value }}

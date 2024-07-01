@@ -25,6 +25,11 @@ wordpress_systemd_wanted_services_list_custom: []
 
 wordpress_version: 6.5.5
 
+wordpress_container_labels_middleware_basic_auth_enabled: false
+# Use `htpasswd -nb USERNAME PASSSWORD` to generate the users below.
+# See: https://doc.traefik.io/traefik/middlewares/http/basicauth/#users
+wordpress_container_labels_middleware_basic_auth_users: ''
+
 wordpress_container_image: "{{ wordpress_container_image_registry_prefix }}wordpress:{{ wordpress_container_image_tag }}"
 wordpress_container_image_registry_prefix: docker.io/
 wordpress_container_image_tag: "{{ wordpress_version }}"

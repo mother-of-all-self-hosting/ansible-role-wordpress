@@ -27,7 +27,7 @@ wordpress_version: 6.5.5
 
 wordpress_container_image: "{{ wordpress_container_image_registry_prefix }}wordpress:{{ wordpress_container_image_tag }}"
 wordpress_container_image_registry_prefix: docker.io/
-wordpress_container_image_tag: "{{ wordpress_version }}-fpm"
+wordpress_container_image_tag: "{{ wordpress_version }}"
 wordpress_container_image_force_pull: "{{ wordpress_container_image.endswith(':latest') }}"
 
 wordpress_container_network: '{{ wordpress_identifier }}'

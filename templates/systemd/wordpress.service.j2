@@ -27,6 +27,7 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
                 --network={{ wordpress_container_network }} \
                 --mount type=bind,src={{ wordpress_data_path }},dst=/var/www/html \
                 --read-only \
+                -v {{ wordpress_uploads_config_location }}:/usr/local/etc/php/conf.d/uploads.ini \
                 --tmpfs=/tmp:rw,noexec,nosuid,size=100m \
                 --tmpfs=/var/run/apache2:rw,noexec,nosuid,size=100m \
                 --env-file={{ wordpress_env_path }} \

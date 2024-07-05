@@ -38,8 +38,8 @@
 
 - name: Ensure wordpress configuration is deployed
   ansible.builtin.template:
-    src: "{{ role_path }}/templates/env.j2"
-    dest: "{{ wordpress_config_path }}/env"
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     owner: "{{ wordpress_uid }}"
     group: "{{ wordpress_gid }}"
     mode: 0640

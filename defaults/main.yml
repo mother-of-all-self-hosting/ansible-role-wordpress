@@ -24,7 +24,7 @@ wordpress_systemd_wanted_services_list_default: []
 wordpress_systemd_wanted_services_list_auto: []
 wordpress_systemd_wanted_services_list_custom: []
 
-wordpress_version: 6.5.5
+wordpress_version: 6.6.2
 
 wordpress_container_labels_middleware_basic_auth_enabled: false
 # Use `htpasswd -nb USERNAME PASSSWORD` to generate the users below.

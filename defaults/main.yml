@@ -1,12 +1,18 @@
 ---
 
+# Project source code URL: https://github.com/WordPress/WordPress/
+
 wordpress_enabled: true
 wordpress_identifier: wordpress
 
+# The hostname at which Wordpress is served.
 wordpress_hostname: ''
 
 wordpress_uid: ''
 wordpress_gid: ''
+
+# renovate: datasource=docker depName=wordpress versioning=semver
+wordpress_version: 6.6.2
 
 wordpress_base_path: "/{{ wordpress_identifier }}"
 wordpress_config_path: "{{ wordpress_base_path }}/config"
@@ -23,8 +29,6 @@ wordpress_systemd_wanted_services_list: "{{ wordpress_systemd_wanted_services_li
 wordpress_systemd_wanted_services_list_default: []
 wordpress_systemd_wanted_services_list_auto: []
 wordpress_systemd_wanted_services_list_custom: []
-
-wordpress_version: 6.6.2
 
 wordpress_container_labels_middleware_basic_auth_enabled: false
 # Use `htpasswd -nb USERNAME PASSSWORD` to generate the users below.

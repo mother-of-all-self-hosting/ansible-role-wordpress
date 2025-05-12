@@ -13,6 +13,8 @@
   when: "item.old in vars"
   with_items:
     - {'old': 'wordpress_env_path', 'new': '<Removed>'}
+    - {'old': 'wordpress_config_path', 'new': '<Removed>'}
+    - {'old': 'wordpress_uploads_config_location', 'new': '<Removed>'}
     - {'old': 'wordpress_environment_variables_extension', 'new': 'wordpress_environment_variables_additional_variables'}
 
 - name: Fail if required WordPress settings not defined

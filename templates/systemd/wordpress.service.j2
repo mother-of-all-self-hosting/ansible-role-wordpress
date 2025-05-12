@@ -32,9 +32,12 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       -p {{ wordpress_container_http_host_bind_port }}:{{ wordpress_container_http_port }} \
       {% endif %}
       --env-file={{ wordpress_base_path }}/env  \
-      --label-file={{ wordpress_config_path }}/labels \
+      --label-file={{ wordpress_base_path }}/labels \
+      --mount type=bind,src={{ wordpress_base_path }}/uploads.ini,dst=/usr/local/etc/php/conf.d/uploads.ini \
       --mount type=bind,src={{ wordpress_data_path }},dst=/var/www/html \
-      --mount type=bind,src={{ wordpress_uploads_config_location }},dst=/usr/local/etc/php/conf.d/uploads.ini \
+      {% for volume in wordpress_container_additional_volumes %}
+      --mount type={{ volume.type | default('bind' if '/' in volume.src else 'volume') }},src={{ volume.src }},dst={{ volume.dst }}{{ (',' + volume.options) if volume.options else '' }} \
+      {% endfor %}
       --tmpfs=/tmp:rw,noexec,nosuid,size=100m \
       --tmpfs=/var/run/apache2:rw,noexec,nosuid,size=100m \
       {{ wordpress_container_image }}

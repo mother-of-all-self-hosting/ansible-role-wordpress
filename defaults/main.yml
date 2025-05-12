@@ -1,4 +1,9 @@
+# SPDX-FileCopyrightText: 2023 - 2024 Nikita Chernyi
+# SPDX-FileCopyrightText: 2023 - 2025 Slavi Pantaleev
 # SPDX-FileCopyrightText: 2024 Julian-Samuel Gebühr
+# SPDX-FileCopyrightText: 2024 Sergio Durigan Junior
+# SPDX-FileCopyrightText: 2025 MASH project contributors
+# SPDX-FileCopyrightText: 2025 Suguru Hirahara
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -23,11 +28,13 @@ wordpress_data_path: "{{ wordpress_base_path }}/data"
 wordpress_env_path: "{{ wordpress_config_path }}/env"
 wordpress_uploads_config_location: "{{ wordpress_config_path }}/uploads.ini"
 
+# List of systemd services that the WordPress systemd service depends on
 wordpress_systemd_required_services_list: "{{ wordpress_systemd_required_services_list_default + wordpress_systemd_required_services_list_auto + wordpress_systemd_required_services_list_custom }}"
 wordpress_systemd_required_services_list_default: ['docker.service']
 wordpress_systemd_required_services_list_auto: []
 wordpress_systemd_required_services_list_custom: []
 
+# List of systemd services that the WordPress systemd service wants
 wordpress_systemd_wanted_services_list: "{{ wordpress_systemd_wanted_services_list_default + wordpress_systemd_wanted_services_list_auto + wordpress_systemd_wanted_services_list_custom }}"
 wordpress_systemd_wanted_services_list_default: []
 wordpress_systemd_wanted_services_list_auto: []
@@ -45,6 +52,7 @@ wordpress_container_image_registry_prefix: docker.io/
 wordpress_container_image_tag: "{{ wordpress_version }}"
 wordpress_container_image_force_pull: "{{ wordpress_container_image.endswith(':latest') }}"
 
+# The base container network. It will be auto-created by this role if it doesn't exist already.
 wordpress_container_network: '{{ wordpress_identifier }}'
 
 # The port number in the container

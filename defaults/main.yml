@@ -1,5 +1,4 @@
 ---
-
 # Project source code URL: https://github.com/WordPress/WordPress/
 
 wordpress_enabled: true
@@ -89,7 +88,6 @@ wordpress_container_labels_traefik_additional_request_headers: "{{ wordpress_con
 wordpress_container_labels_traefik_additional_request_headers_auto: {}
 wordpress_container_labels_traefik_additional_request_headers_custom: {}
 
-
 # Controls which additional headers to attach to all HTTP responses.
 # To add your own custom response headers, use `wordpress_container_labels_traefik_additional_response_headers_custom`
 wordpress_container_labels_traefik_additional_response_headers: "{{ wordpress_container_labels_traefik_additional_response_headers_auto | combine(wordpress_container_labels_traefik_additional_response_headers_custom) }}"
@@ -150,7 +148,6 @@ wordpress_floc_optout_enabled: true
 # - https://hstspreload.org/#opt-in
 # See: `wordpress_http_header_strict_transport_security`
 wordpress_hsts_preload_enabled: false
-
 
 # wordpress_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
 # See `../templates/labels.j2` for details.

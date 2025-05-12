@@ -7,4 +7,3 @@
   when: "vars[item] == ''"
   with_items:
     - wordpress_hostname
-

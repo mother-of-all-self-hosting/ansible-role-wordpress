@@ -26,17 +26,17 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
                 --log-driver=none \
                 --user={{ wordpress_uid }}:{{ wordpress_gid }} \
                 --cap-drop=ALL \
+                --read-only \
+                --network={{ wordpress_container_network }} \
                 {% if wordpress_container_http_host_bind_port %}
                 -p {{ wordpress_container_http_host_bind_port }}:{{ wordpress_container_http_port }} \
                 {% endif %}
+                --env-file={{ wordpress_env_path }} \
                 --label-file={{ wordpress_config_path }}/labels \
-                --network={{ wordpress_container_network }} \
                 --mount type=bind,src={{ wordpress_data_path }},dst=/var/www/html \
-                --read-only \
                 --mount type=bind,src={{ wordpress_uploads_config_location }},dst=/usr/local/etc/php/conf.d/uploads.ini \
                 --tmpfs=/tmp:rw,noexec,nosuid,size=100m \
                 --tmpfs=/var/run/apache2:rw,noexec,nosuid,size=100m \
-                --env-file={{ wordpress_env_path }} \
                 {{ wordpress_container_image }}
 
 {% for network in wordpress_container_additional_networks %}

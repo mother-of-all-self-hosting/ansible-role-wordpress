@@ -13,7 +13,7 @@
 wordpress_enabled: true
 wordpress_identifier: wordpress
 
-# The hostname at which Wordpress is served.
+# The hostname at which WordPress is served.
 wordpress_hostname: ''
 
 wordpress_uid: ''
@@ -60,7 +60,7 @@ wordpress_container_network: '{{ wordpress_identifier }}'
 # The port number in the container
 wordpress_container_http_port: 80
 
-# Controls whether the wordpress container exposes its HTTP port (as defined by `wordpress_container_http_port`).
+# Controls whether the WordPress container exposes its HTTP port (as defined by `wordpress_container_http_port`).
 #
 # Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:8731"), or empty string to not expose.
 wordpress_container_http_host_bind_port: ""
@@ -81,7 +81,7 @@ wordpress_database_password: ''
 # Set to 1 to enable debug mode (!security risk!)
 wordpress_debug: 0
 
-# Additional environment variables to pass to the wordpress container.
+# Additional environment variables to pass to the WordPress container.
 # You can use this to further influence the default configuration.
 wordpress_environment_variables_additional_variables: ''
 

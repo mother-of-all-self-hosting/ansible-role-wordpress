@@ -4,7 +4,7 @@
 
 ---
 
-- name: Ensure wordpress path exists
+- name: Ensure WordPress path exists
   ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
@@ -15,7 +15,7 @@
     - {path: "{{ wordpress_base_path }}", when: true}
     - {path: "{{ wordpress_config_path }}", when: true}
 
-- name: Ensure wordpress data path exists
+- name: Ensure WordPress data path exists
   ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
@@ -25,7 +25,7 @@
   with_items:
     - {path: "{{ wordpress_data_path }}", when: true}
 
-- name: Ensure wordpress traefik labels are installed
+- name: Ensure WordPress traefik labels are installed
   ansible.builtin.template:
     src: "{{ role_path }}/templates/labels.j2"
     dest: "{{ wordpress_config_path }}/labels"
@@ -33,7 +33,7 @@
     group: "{{ wordpress_gid }}"
     mode: 0640
 
-- name: Ensure wordpress configuration is deployed
+- name: Ensure WordPress configuration is deployed
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -44,7 +44,7 @@
     - {src: "{{ role_path }}/templates/env.j2", dest: "{{ wordpress_env_path }}", when: true}
     - {src: "{{ role_path }}/templates/uploads.ini.j2", dest: "{{ wordpress_uploads_config_location }}", when: true}
 
-- name: Ensure wordpress container image is pulled
+- name: Ensure WordPress container image is pulled
   community.docker.docker_image:
     name: "{{ wordpress_container_image }}"
     source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
@@ -55,7 +55,7 @@
   delay: "{{ devture_playbook_help_container_retries_delay }}"
   until: result is not failed
 
-- name: Ensure Wordpress container network is created
+- name: Ensure WordPress container network is created
   community.docker.docker_network:
     enable_ipv6: "{{ devture_systemd_docker_base_ipv6_enabled }}"
     name: "{{ wordpress_container_network }}"

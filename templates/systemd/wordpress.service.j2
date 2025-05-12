@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 #}
 
 [Unit]
-Description=Wordpress Server ({{ wordpress_identifier }})
+Description=WordPress Server ({{ wordpress_identifier }})
 {% for service in wordpress_systemd_required_services_list %}
 Requires={{ service }}
 After={{ service }}

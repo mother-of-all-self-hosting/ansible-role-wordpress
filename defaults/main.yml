@@ -25,7 +25,6 @@ wordpress_version: 6.6.2
 wordpress_base_path: "/{{ wordpress_identifier }}"
 wordpress_config_path: "{{ wordpress_base_path }}/config"
 wordpress_data_path: "{{ wordpress_base_path }}/data"
-wordpress_env_path: "{{ wordpress_config_path }}/env"
 wordpress_uploads_config_location: "{{ wordpress_config_path }}/uploads.ini"
 
 # List of systemd services that the WordPress systemd service depends on

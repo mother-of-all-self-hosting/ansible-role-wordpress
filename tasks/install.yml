@@ -25,13 +25,16 @@
   with_items:
     - {path: "{{ wordpress_data_path }}", when: true}
 
-- name: Ensure WordPress traefik labels are installed
+- name: Ensure WordPress support files installed
   ansible.builtin.template:
-    src: "{{ role_path }}/templates/labels.j2"
-    dest: "{{ wordpress_config_path }}/labels"
+    src: "{{ role_path }}/templates/{{ item }}.j2"
+    dest: "{{ wordpress_base_path }}/{{ item }}"
+    mode: "0640"
     owner: "{{ wordpress_uid }}"
     group: "{{ wordpress_gid }}"
-    mode: 0640
+  with_items:
+    - env
+    - labels
 
 - name: Ensure WordPress configuration is deployed
   ansible.builtin.template:
@@ -41,7 +44,6 @@
     group: "{{ wordpress_gid }}"
     mode: 0640
   with_items:
-    - {src: "{{ role_path }}/templates/env.j2", dest: "{{ wordpress_env_path }}", when: true}
     - {src: "{{ role_path }}/templates/uploads.ini.j2", dest: "{{ wordpress_uploads_config_location }}", when: true}
 
 - name: Ensure WordPress container image is pulled

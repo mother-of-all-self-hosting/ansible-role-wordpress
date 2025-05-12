@@ -11,38 +11,19 @@
 # Project source code URL: https://github.com/WordPress/WordPress/
 
 wordpress_enabled: true
+
 wordpress_identifier: wordpress
-
-# The hostname at which WordPress is served.
-wordpress_hostname: ''
-
-wordpress_uid: ''
-wordpress_gid: ''
+wordpress_base_path: "/{{ wordpress_identifier }}"
+wordpress_data_path: "{{ wordpress_base_path }}/data"
 
 # renovate: datasource=docker depName=wordpress versioning=semver
 wordpress_version: 6.6.2
 
-wordpress_base_path: "/{{ wordpress_identifier }}"
-wordpress_data_path: "{{ wordpress_base_path }}/data"
+wordpress_uid: ''
+wordpress_gid: ''
 
-# List of systemd services that the WordPress systemd service depends on
-wordpress_systemd_required_services_list: "{{ wordpress_systemd_required_services_list_default + wordpress_systemd_required_services_list_auto + wordpress_systemd_required_services_list_custom }}"
-wordpress_systemd_required_services_list_default: ['docker.service']
-wordpress_systemd_required_services_list_auto: []
-wordpress_systemd_required_services_list_custom: []
-
-# List of systemd services that the WordPress systemd service wants
-wordpress_systemd_wanted_services_list: "{{ wordpress_systemd_wanted_services_list_default + wordpress_systemd_wanted_services_list_auto + wordpress_systemd_wanted_services_list_custom }}"
-wordpress_systemd_wanted_services_list_default: []
-wordpress_systemd_wanted_services_list_auto: []
-wordpress_systemd_wanted_services_list_custom: []
-
-wordpress_container_labels_middleware_basic_auth_enabled: false
-# Use `htpasswd -nb USERNAME PASSSWORD` to generate the users below.
-# See: https://doc.traefik.io/traefik/middlewares/http/basicauth/#users
-wordpress_container_labels_middleware_basic_auth_users: ''
-
-wordpress_max_upload_size: '64M'
+# The hostname at which WordPress is served.
+wordpress_hostname: ''
 
 wordpress_container_image: "{{ wordpress_container_image_registry_prefix }}wordpress:{{ wordpress_container_image_tag }}"
 wordpress_container_image_tag: "{{ wordpress_version }}"
@@ -51,16 +32,16 @@ wordpress_container_image_registry_prefix_upstream: "{{ wordpress_container_imag
 wordpress_container_image_registry_prefix_upstream_default: docker.io/
 wordpress_container_image_force_pull: "{{ wordpress_container_image.endswith(':latest') }}"
 
+# Controls whether the WordPress container exposes its HTTP port (as defined by `wordpress_container_http_port`).
+#
+# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:8731"), or empty string to not expose.
+wordpress_container_http_host_bind_port: ""
+
 # The base container network. It will be auto-created by this role if it doesn't exist already.
 wordpress_container_network: '{{ wordpress_identifier }}'
 
 # The port number in the container
 wordpress_container_http_port: 80
-
-# Controls whether the WordPress container exposes its HTTP port (as defined by `wordpress_container_http_port`).
-#
-# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:8731"), or empty string to not expose.
-wordpress_container_http_host_bind_port: ""
 
 # A list of additional container networks that the container would be connected to.
 # The role does not create these networks, so make sure they already exist.
@@ -76,22 +57,6 @@ wordpress_container_additional_networks_custom: []
 # See the `--mount` documentation for the `docker run` command.
 wordpress_container_additional_volumes: []
 
-wordpress_database_hostname: ''
-wordpress_database_port: 3306
-wordpress_database_name: wordpress
-wordpress_database_username: wordpress
-wordpress_database_password: ''
-
-# Set to 1 to enable debug mode (!security risk!)
-wordpress_debug: 0
-
-# Additional environment variables to pass to the WordPress container.
-# You can use this to further influence the default configuration.
-wordpress_environment_variables_additional_variables: ''
-
-# Additional variables for uploads.ini file mounted on the container.
-wordpress_uploads_ini_additional_variables: ''
-
 # wordpress_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
 # See `../templates/labels.j2` for details.
 #
@@ -102,6 +67,10 @@ wordpress_container_labels_traefik_entrypoints: web-secure
 wordpress_container_labels_traefik_priority: 0
 wordpress_container_labels_traefik_tls: "{{ wordpress_container_labels_traefik_entrypoints != 'web' }}"
 wordpress_container_labels_traefik_tls_certResolver: default  # noqa var-naming
+wordpress_container_labels_middleware_basic_auth_enabled: false
+# Use `htpasswd -nb USERNAME PASSSWORD` to generate the users below.
+# See: https://doc.traefik.io/traefik/middlewares/http/basicauth/#users
+wordpress_container_labels_middleware_basic_auth_users: ''
 
 # Controls which additional headers to attach to all HTTP requests.
 # To add your own custom request headers, use `wordpress_container_labels_traefik_additional_response_headers_custom`
@@ -122,6 +91,15 @@ wordpress_container_labels_traefik_additional_response_headers_auto: |
     | combine ({'Strict-Transport-Security': wordpress_http_header_strict_transport_security} if wordpress_http_header_strict_transport_security and wordpress_container_labels_traefik_tls else {})
   }}
 wordpress_container_labels_traefik_additional_response_headers_custom: {}
+
+# wordpress_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
+# See `../templates/labels.j2` for details.
+#
+# Example:
+# wordpress_container_labels_additional_labels: |
+#   my.label=1
+#   another.label="here"
+wordpress_container_labels_additional_labels: ''
 
 # Specifies the value of the `X-XSS-Protection` header
 # Stops pages from loading when they detect reflected cross-site scripting (XSS) attacks.
@@ -170,11 +148,32 @@ wordpress_floc_optout_enabled: true
 # See: `wordpress_http_header_strict_transport_security`
 wordpress_hsts_preload_enabled: false
 
-# wordpress_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
-# See `../templates/labels.j2` for details.
-#
-# Example:
-# wordpress_container_labels_additional_labels: |
-#   my.label=1
-#   another.label="here"
-wordpress_container_labels_additional_labels: ''
+# List of systemd services that the WordPress systemd service depends on
+wordpress_systemd_required_services_list: "{{ wordpress_systemd_required_services_list_default + wordpress_systemd_required_services_list_auto + wordpress_systemd_required_services_list_custom }}"
+wordpress_systemd_required_services_list_default: ['docker.service']
+wordpress_systemd_required_services_list_auto: []
+wordpress_systemd_required_services_list_custom: []
+
+# List of systemd services that the WordPress systemd service wants
+wordpress_systemd_wanted_services_list: "{{ wordpress_systemd_wanted_services_list_default + wordpress_systemd_wanted_services_list_auto + wordpress_systemd_wanted_services_list_custom }}"
+wordpress_systemd_wanted_services_list_default: []
+wordpress_systemd_wanted_services_list_auto: []
+wordpress_systemd_wanted_services_list_custom: []
+
+wordpress_max_upload_size: '64M'
+
+wordpress_database_hostname: ''
+wordpress_database_port: 3306
+wordpress_database_name: wordpress
+wordpress_database_username: wordpress
+wordpress_database_password: ''
+
+# Set to 1 to enable debug mode (!security risk!)
+wordpress_debug: 0
+
+# Additional environment variables to pass to the WordPress container.
+# You can use this to further influence the default configuration.
+wordpress_environment_variables_additional_variables: ''
+
+# Additional variables for uploads.ini file mounted on the container.
+wordpress_uploads_ini_additional_variables: ''

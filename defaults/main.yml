@@ -12,7 +12,7 @@ wordpress_uid: ''
 wordpress_gid: ''
 
 # renovate: datasource=docker depName=wordpress versioning=semver
-wordpress_version: 6.6.2
+wordpress_version: 6.8.1
 
 wordpress_base_path: "/{{ wordpress_identifier }}"
 wordpress_config_path: "{{ wordpress_base_path }}/config"

@@ -4,11 +4,6 @@
 
 ---
 
-- name: Ensure wordpress network is created in Docker
-  community.docker.docker_network:
-    name: "{{ wordpress_container_network }}"
-    driver: bridge
-
 - name: Ensure wordpress path exists
   ansible.builtin.file:
     path: "{{ item.path }}"
@@ -59,6 +54,13 @@
   retries: "{{ devture_playbook_help_container_retries_count }}"
   delay: "{{ devture_playbook_help_container_retries_delay }}"
   until: result is not failed
+
+- name: Ensure Wordpress container network is created
+  community.docker.docker_network:
+    enable_ipv6: "{{ devture_systemd_docker_base_ipv6_enabled }}"
+    name: "{{ wordpress_container_network }}"
+    driver: bridge
+    driver_options: "{{ devture_systemd_docker_base_container_networks_driver_options }}"
 
 - name: Ensure WordPress systemd service is present
   ansible.builtin.template:

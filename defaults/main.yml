@@ -73,7 +73,7 @@ wordpress_debug: 0
 wordpress_environment_variables_extension: ''
 
 # wordpress_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
-# See `roles/custom/wordpress_wordpress/templates/labels.j2` for details.
+# See `../templates/labels.j2` for details.
 #
 # To inject your own other container labels, see `wordpress_container_labels_additional_labels`.
 wordpress_container_labels_traefik_enabled: false
@@ -153,7 +153,7 @@ wordpress_hsts_preload_enabled: false
 
 
 # wordpress_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
-# See `roles/custom/collabora_online/templates/labels.j2` for details.
+# See `../templates/labels.j2` for details.
 #
 # Example:
 # wordpress_container_labels_additional_labels: |

@@ -21,23 +21,23 @@ ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_s
 ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm {{ wordpress_identifier }} 2>/dev/null || true'
 
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
-                --rm \
-                --name={{ wordpress_identifier }} \
-                --log-driver=none \
-                --user={{ wordpress_uid }}:{{ wordpress_gid }} \
-                --cap-drop=ALL \
-                --read-only \
-                --network={{ wordpress_container_network }} \
-                {% if wordpress_container_http_host_bind_port %}
-                -p {{ wordpress_container_http_host_bind_port }}:{{ wordpress_container_http_port }} \
-                {% endif %}
-                --env-file={{ wordpress_env_path }} \
-                --label-file={{ wordpress_config_path }}/labels \
-                --mount type=bind,src={{ wordpress_data_path }},dst=/var/www/html \
-                --mount type=bind,src={{ wordpress_uploads_config_location }},dst=/usr/local/etc/php/conf.d/uploads.ini \
-                --tmpfs=/tmp:rw,noexec,nosuid,size=100m \
-                --tmpfs=/var/run/apache2:rw,noexec,nosuid,size=100m \
-                {{ wordpress_container_image }}
+      --rm \
+      --name={{ wordpress_identifier }} \
+      --log-driver=none \
+      --user={{ wordpress_uid }}:{{ wordpress_gid }} \
+      --cap-drop=ALL \
+      --read-only \
+      --network={{ wordpress_container_network }} \
+      {% if wordpress_container_http_host_bind_port %}
+      -p {{ wordpress_container_http_host_bind_port }}:{{ wordpress_container_http_port }} \
+      {% endif %}
+      --env-file={{ wordpress_env_path }} \
+      --label-file={{ wordpress_config_path }}/labels \
+      --mount type=bind,src={{ wordpress_data_path }},dst=/var/www/html \
+      --mount type=bind,src={{ wordpress_uploads_config_location }},dst=/usr/local/etc/php/conf.d/uploads.ini \
+      --tmpfs=/tmp:rw,noexec,nosuid,size=100m \
+      --tmpfs=/var/run/apache2:rw,noexec,nosuid,size=100m \
+      {{ wordpress_container_image }}
 
 {% for network in wordpress_container_additional_networks %}
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network connect {{ network }} {{ wordpress_identifier }}

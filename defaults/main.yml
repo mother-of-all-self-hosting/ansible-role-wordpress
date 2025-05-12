@@ -83,7 +83,7 @@ wordpress_debug: 0
 
 # Additional environment variables to pass to the wordpress container.
 # You can use this to further influence the default configuration.
-wordpress_environment_variables_extension: ''
+wordpress_environment_variables_additional_variables: ''
 
 # wordpress_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
 # See `../templates/labels.j2` for details.

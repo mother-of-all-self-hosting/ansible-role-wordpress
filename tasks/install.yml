@@ -52,7 +52,7 @@
     name: "{{ wordpress_container_image }}"
     source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
 
-- name: Ensure wordpress.service installed
+- name: Ensure WordPress systemd service is present
   ansible.builtin.template:
     src: "{{ role_path }}/templates/systemd/wordpress.service.j2"
     dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ wordpress_identifier }}.service"

@@ -6,23 +6,23 @@
 
 - name: Ensure WordPress path exists
   ansible.builtin.file:
-    path: "{{ item.path }}"
+    path: "{{ item }}"
     state: directory
     mode: 0700
     owner: "{{ wordpress_uid }}"
     group: "{{ wordpress_gid }}"
   with_items:
-    - {path: "{{ wordpress_base_path }}", when: true}
+    - "{{ wordpress_base_path }}"
 
 - name: Ensure WordPress data path exists
   ansible.builtin.file:
-    path: "{{ item.path }}"
+    path: "{{ item }}"
     state: directory
     mode: 0755
     owner: "{{ wordpress_uid }}"
     group: "{{ wordpress_gid }}"
   with_items:
-    - {path: "{{ wordpress_data_path }}", when: true}
+    - "{{ wordpress_data_path }}"
 
 - name: Ensure WordPress support files installed
   ansible.builtin.template:

@@ -28,7 +28,7 @@
   ansible.builtin.template:
     src: "{{ role_path }}/templates/{{ item }}.j2"
     dest: "{{ wordpress_base_path }}/{{ item }}"
-    mode: "0640"
+    mode: 0640
     owner: "{{ wordpress_uid }}"
     group: "{{ wordpress_gid }}"
   with_items:

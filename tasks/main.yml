@@ -1,14 +1,18 @@
+# SPDX-FileCopyrightText: 2023 Slavi Pantaleev
 # SPDX-FileCopyrightText: 2024 Julian-Samuel Gebühr
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
 
-- block:
-    - when: wordpress_enabled | bool
+- name: Perform WordPress installation tasks
+  block:
+    - name: Validate WordPress configuration
+      when: wordpress_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/validate_config.yml"
 
-    - when: wordpress_enabled | bool
+    - name: Install WordPress
+      when: wordpress_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/install.yml"
   tags:
     - setup-all
@@ -16,8 +20,10 @@
     - install-all
     - install-wordpress
 
-- block:
-    - when: not wordpress_enabled | bool
+- name: Perform WordPress uninstallation tasks
+  block:
+    - name: Uninstall WordPress
+      when: not wordpress_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/uninstall.yml"
   tags:
     - setup-all

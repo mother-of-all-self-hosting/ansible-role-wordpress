@@ -4,27 +4,25 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-
 - name: Perform WordPress installation tasks
-  block:
-    - name: Validate WordPress configuration
-      when: wordpress_enabled | bool
-      ansible.builtin.include_tasks: "{{ role_path }}/tasks/validate_config.yml"
-
-    - name: Install WordPress
-      when: wordpress_enabled | bool
-      ansible.builtin.include_tasks: "{{ role_path }}/tasks/install.yml"
   tags:
     - setup-all
     - setup-wordpress
     - install-all
     - install-wordpress
+  block:
+    - name: Validate WordPress configuration
+      when: wordpress_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/validate_config.yml"
+    - name: Install WordPress
+      when: wordpress_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/install.yml"
 
 - name: Perform WordPress uninstallation tasks
+  tags:
+    - setup-all
+    - setup-wordpress
   block:
     - name: Uninstall WordPress
       when: not wordpress_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/uninstall.yml"
-  tags:
-    - setup-all
-    - setup-wordpress

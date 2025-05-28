@@ -68,7 +68,7 @@ wordpress_container_labels_traefik_priority: 0
 wordpress_container_labels_traefik_tls: "{{ wordpress_container_labels_traefik_entrypoints != 'web' }}"
 wordpress_container_labels_traefik_tls_certResolver: default  # noqa var-naming
 wordpress_container_labels_middleware_basic_auth_enabled: false
-# Use `htpasswd -nb USERNAME PASSSWORD` to generate the users below.
+# Use `htpasswd -nb USERNAME PASSWORD` to generate the users below.
 # See: https://doc.traefik.io/traefik/middlewares/http/basicauth/#users
 wordpress_container_labels_middleware_basic_auth_users: ''
 

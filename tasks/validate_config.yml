@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-
 - name: (Deprecation) Catch and report renamed settings
   ansible.builtin.fail:
     msg: >-
@@ -12,10 +11,10 @@
       Please change your configuration to rename the variable (`{{ item.old }}` -> `{{ item.new }}`).
   when: "item.old in vars"
   with_items:
-    - {'old': 'wordpress_env_path', 'new': '<Removed>'}
-    - {'old': 'wordpress_config_path', 'new': '<Removed>'}
-    - {'old': 'wordpress_uploads_config_location', 'new': '<Removed>'}
-    - {'old': 'wordpress_environment_variables_extension', 'new': 'wordpress_environment_variables_additional_variables'}
+    - { "old": "wordpress_env_path", "new": "<Removed>" }
+    - { "old": "wordpress_config_path", "new": "<Removed>" }
+    - { "old": "wordpress_uploads_config_location", "new": "<Removed>" }
+    - { "old": "wordpress_environment_variables_extension", "new": "wordpress_environment_variables_additional_variables" }
 
 - name: Fail if required WordPress settings not defined
   ansible.builtin.fail:

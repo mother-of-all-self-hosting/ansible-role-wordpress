@@ -5,6 +5,7 @@
 
 ---
 - name: Perform WordPress installation tasks
+  when: wordpress_enabled | bool
   tags:
     - setup-all
     - setup-wordpress
@@ -12,17 +13,15 @@
     - install-wordpress
   block:
     - name: Validate WordPress configuration
-      when: wordpress_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/validate_config.yml"
     - name: Install WordPress
-      when: wordpress_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/install.yml"
 
 - name: Perform WordPress uninstallation tasks
+  when: not wordpress_enabled | bool
   tags:
     - setup-all
     - setup-wordpress
   block:
     - name: Uninstall WordPress
-      when: not wordpress_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/uninstall.yml"

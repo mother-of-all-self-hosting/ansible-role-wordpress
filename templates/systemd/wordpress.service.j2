@@ -40,7 +40,7 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       {% endfor %}
       --tmpfs=/tmp:rw,noexec,nosuid,size=100m \
       --tmpfs=/var/run/apache2:rw,noexec,nosuid,size=100m \
-      {{ wordpress_container_image }}
+      {{ wordpress_container_image_self_build_name if wordpress_container_image_self_build else wordpress_container_image }}
 
 {% for network in wordpress_container_additional_networks %}
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network connect {{ network }} {{ wordpress_identifier }}

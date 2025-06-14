@@ -16,6 +16,7 @@ wordpress_identifier: wordpress
 wordpress_base_path: "/{{ wordpress_identifier }}"
 wordpress_data_path: "{{ wordpress_base_path }}/data"
 
+# Note: Change "wordpress_container_image_self_build_dockerfile" when updating
 # renovate: datasource=docker depName=wordpress versioning=semver
 wordpress_version: 6.6.2
 
@@ -36,6 +37,7 @@ wordpress_container_image_self_build: false
 wordpress_container_image_self_build_name: "docker-library/wordpress:{{ wordpress_container_image_self_build_repo_version }}"
 wordpress_container_image_self_build_repo: "https://github.com/docker-library/wordpress.git"
 wordpress_container_image_self_build_repo_version: "master"
+wordpress_container_image_self_build_dockerfile: "latest/php8.2/apache/Dockerfile"
 wordpress_container_image_self_build_src_files_path: "{{ wordpress_base_path }}/docker-src"
 
 # Controls whether the WordPress container exposes its HTTP port (as defined by `wordpress_container_http_port`).

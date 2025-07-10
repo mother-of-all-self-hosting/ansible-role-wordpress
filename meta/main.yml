@@ -1,8 +1,9 @@
 ---
 galaxy_info:
-  role_name: wordpress
   author: Julian-Samuel Gebühr
   company: Hyteck
+  role_name: wordpress
+  namespace: mash
   description: Ansible role to install WordPress, a popular open source publishing platform.
   platforms:
     - name: Debian

@@ -26,6 +26,8 @@ wordpress_gid: ''
 # The hostname at which WordPress is served.
 wordpress_hostname: ''
 
+wordpress_path_prefix: /
+
 wordpress_container_image: "{{ wordpress_container_image_registry_prefix }}wordpress:{{ wordpress_container_image_tag }}"
 wordpress_container_image_tag: "{{ wordpress_version }}"
 wordpress_container_image_registry_prefix: "{{ wordpress_container_image_registry_prefix_upstream }}"
@@ -69,10 +71,14 @@ wordpress_container_additional_volumes: []
 # See `../templates/labels.j2` for details.
 #
 # To inject your own other container labels, see `wordpress_container_labels_additional_labels`.
-wordpress_container_labels_traefik_enabled: false
-wordpress_container_labels_traefik_docker_network: ""
-wordpress_container_labels_traefik_entrypoints: web-secure
+wordpress_container_labels_traefik_enabled: true
+wordpress_container_labels_traefik_docker_network: "{{ wordpress_container_network }}"
+wordpress_container_labels_traefik_hostname: "{{ wordpress_hostname }}"
+# The path prefix must either be `/` or not end with a slash (e.g. `/wordpress`).
+wordpress_container_labels_traefik_path_prefix: "{{ wordpress_path_prefix }}"
+wordpress_container_labels_traefik_rule: "Host(`{{ wordpress_container_labels_traefik_hostname }}`){% if wordpress_container_labels_traefik_path_prefix != '/' %} && PathPrefix(`{{ wordpress_container_labels_traefik_path_prefix }}`){% endif %}"
 wordpress_container_labels_traefik_priority: 0
+wordpress_container_labels_traefik_entrypoints: web-secure
 wordpress_container_labels_traefik_tls: "{{ wordpress_container_labels_traefik_entrypoints != 'web' }}"
 wordpress_container_labels_traefik_tls_certResolver: default  # noqa var-naming
 wordpress_container_labels_middleware_basic_auth_enabled: false

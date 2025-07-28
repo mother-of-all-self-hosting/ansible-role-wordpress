@@ -1,10 +1,13 @@
 {#
+SPDX-FileCopyrightText: 2023 Slavi Pantaleev
 SPDX-FileCopyrightText: 2024 Julian-Samuel Gebühr
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 #}
 
 {% if wordpress_container_labels_traefik_enabled %}
+traefik.enable=true
+
 {% if wordpress_container_labels_traefik_docker_network %}
 traefik.docker.network={{ wordpress_container_labels_traefik_docker_network }}
 {% endif %}
@@ -14,6 +17,17 @@ traefik.docker.network={{ wordpress_container_labels_traefik_docker_network }}
 {% if wordpress_container_labels_middleware_basic_auth_enabled %}
 {% set middlewares = middlewares + [wordpress_identifier + '-basic-auth'] %}
 traefik.http.middlewares.{{ wordpress_identifier }}-basic-auth.basicauth.users={{ wordpress_container_labels_middleware_basic_auth_users }}
+{% endif %}
+
+{% if wordpress_container_labels_traefik_path_prefix != '/' %}
+traefik.http.middlewares.{{ wordpress_identifier }}-slashless-redirect.redirectregex.regex=^({{ wordpress_container_labels_traefik_path_prefix | quote }})$
+traefik.http.middlewares.{{ wordpress_identifier }}-slashless-redirect.redirectregex.replacement=${1}/
+{% set middlewares = middlewares + [wordpress_identifier + '-slashless-redirect'] %}
+{% endif %}
+
+{% if wordpress_container_labels_traefik_path_prefix != '/' %}
+traefik.http.middlewares.{{ wordpress_identifier }}-strip-prefix.stripprefix.prefixes={{ wordpress_container_labels_traefik_path_prefix }}
+{% set middlewares = middlewares + [wordpress_identifier + '-strip-prefix'] %}
 {% endif %}
 
 {% if wordpress_container_labels_traefik_additional_request_headers.keys() | length > 0 %}
@@ -30,21 +44,21 @@ traefik.http.middlewares.{{ wordpress_identifier }}-add-response-headers.headers
 {% set middlewares = middlewares + [wordpress_identifier + '-add-response-headers'] %}
 {% endif %}
 
-traefik.enable=true
-{% endif %}
-traefik.http.routers.{{ wordpress_identifier }}.rule=Host("{{ wordpress_hostname }}")
+traefik.http.routers.{{ wordpress_identifier }}.rule={{ wordpress_container_labels_traefik_rule }}
 {% if wordpress_container_labels_traefik_priority | int > 0 %}
 traefik.http.routers.{{ wordpress_identifier }}.priority={{ wordpress_container_labels_traefik_priority }}
 {% endif %}
+traefik.http.routers.{{ wordpress_identifier }}.service={{ wordpress_identifier }}
 {% if middlewares | length > 0 %}
 traefik.http.routers.{{ wordpress_identifier }}.middlewares={{ middlewares | join(',') }}
 {% endif %}
-traefik.http.routers.{{ wordpress_identifier }}.service={{ wordpress_identifier }}
 traefik.http.routers.{{ wordpress_identifier }}.entrypoints={{ wordpress_container_labels_traefik_entrypoints }}
 traefik.http.routers.{{ wordpress_identifier }}.tls={{ wordpress_container_labels_traefik_tls | to_json }}
 {% if wordpress_container_labels_traefik_tls %}
 traefik.http.routers.{{ wordpress_identifier }}.tls.certResolver={{ wordpress_container_labels_traefik_tls_certResolver }}
 {% endif %}
+
 traefik.http.services.{{ wordpress_identifier }}.loadbalancer.server.port={{ wordpress_container_http_port }}
+{% endif %}
 
 {{ wordpress_container_labels_additional_labels }}

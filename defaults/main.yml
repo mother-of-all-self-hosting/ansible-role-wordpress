@@ -81,7 +81,7 @@ wordpress_container_labels_middleware_basic_auth_enabled: false
 wordpress_container_labels_middleware_basic_auth_users: ''
 
 # Controls which additional headers to attach to all HTTP requests.
-# To add your own custom request headers, use `wordpress_container_labels_traefik_additional_response_headers_custom`
+# To add your own custom request headers, use `wordpress_container_labels_traefik_additional_request_headers_custom`
 wordpress_container_labels_traefik_additional_request_headers: "{{ wordpress_container_labels_traefik_additional_request_headers_auto | combine(wordpress_container_labels_traefik_additional_request_headers_custom) }}"
 wordpress_container_labels_traefik_additional_request_headers_auto: {}
 wordpress_container_labels_traefik_additional_request_headers_custom: {}

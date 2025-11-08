@@ -20,11 +20,11 @@ wordpress_data_path: "{{ wordpress_base_path }}/data"
 # renovate: datasource=docker depName=wordpress versioning=semver
 wordpress_version: 6.8.3
 
-wordpress_uid: ''
-wordpress_gid: ''
+wordpress_uid: ""
+wordpress_gid: ""
 
 # The hostname at which WordPress is served.
-wordpress_hostname: ''
+wordpress_hostname: ""
 
 wordpress_path_prefix: /
 
@@ -86,7 +86,7 @@ wordpress_container_labels_traefik_tls_certResolver: default  # noqa var-naming
 wordpress_container_labels_middleware_basic_auth_enabled: false
 # Use `htpasswd -nb USERNAME PASSWORD` to generate the users below.
 # See: https://doc.traefik.io/traefik/middlewares/http/basicauth/#users
-wordpress_container_labels_middleware_basic_auth_users: ''
+wordpress_container_labels_middleware_basic_auth_users: ""
 
 # Controls which additional headers to attach to all HTTP requests.
 # To add your own custom request headers, use `wordpress_container_labels_traefik_additional_request_headers_custom`
@@ -115,7 +115,7 @@ wordpress_container_labels_traefik_additional_response_headers_custom: {}
 # wordpress_container_labels_additional_labels: |
 #   my.label=1
 #   another.label="here"
-wordpress_container_labels_additional_labels: ''
+wordpress_container_labels_additional_labels: ""
 
 # Specifies the value of the `X-XSS-Protection` header
 # Stops pages from loading when they detect reflected cross-site scripting (XSS) attacks.
@@ -178,18 +178,18 @@ wordpress_systemd_wanted_services_list_custom: []
 
 wordpress_max_upload_size: '64M'
 
-wordpress_database_hostname: ''
+wordpress_database_hostname: ""
 wordpress_database_port: 3306
 wordpress_database_name: wordpress
 wordpress_database_username: wordpress
-wordpress_database_password: ''
+wordpress_database_password: ""
 
 # Set to 1 to enable debug mode (!security risk!)
 wordpress_debug: 0
 
 # Additional environment variables to pass to the WordPress container.
 # You can use this to further influence the default configuration.
-wordpress_environment_variables_additional_variables: ''
+wordpress_environment_variables_additional_variables: ""
 
 # Additional variables for uploads.ini file mounted on the container.
-wordpress_uploads_ini_additional_variables: ''
+wordpress_uploads_ini_additional_variables: ""

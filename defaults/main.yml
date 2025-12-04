@@ -18,7 +18,7 @@ wordpress_data_path: "{{ wordpress_base_path }}/data"
 
 # Note: Change "wordpress_container_image_self_build_dockerfile" when updating
 # renovate: datasource=docker depName=wordpress versioning=semver
-wordpress_version: 6.8.3
+wordpress_version: 6.9.0
 
 wordpress_uid: ""
 wordpress_gid: ""

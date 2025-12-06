@@ -85,7 +85,7 @@ wordpress_container_labels_traefik_tls: "{{ wordpress_container_labels_traefik_e
 wordpress_container_labels_traefik_tls_certResolver: default  # noqa var-naming
 wordpress_container_labels_middleware_basic_auth_enabled: false
 # Use `htpasswd -nb USERNAME PASSWORD` to generate the users below.
-# See: https://doc.traefik.io/traefik/middlewares/http/basicauth/#users
+# See: https://doc.traefik.io/traefik/reference/routing-configuration/http/middlewares/basicauth/
 wordpress_container_labels_middleware_basic_auth_users: ""
 
 # Controls which additional headers to attach to all HTTP requests.

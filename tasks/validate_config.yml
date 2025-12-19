@@ -26,6 +26,7 @@
     - wordpress_uid
     - wordpress_gid
     - wordpress_hostname
+    - wordpress_path_prefix
     - wordpress_container_network
 
 - name: Run if Traefik is enabled

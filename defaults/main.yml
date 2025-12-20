@@ -187,6 +187,9 @@ wordpress_database_password: ""
 # Set to 1 to enable debug mode (!security risk!)
 wordpress_debug: 0
 
+# Specify the timezone
+wordpress_environment_variables_tz: UTC
+
 # Additional environment variables to pass to the WordPress container.
 # You can use this to further influence the default configuration.
 wordpress_environment_variables_additional_variables: ""

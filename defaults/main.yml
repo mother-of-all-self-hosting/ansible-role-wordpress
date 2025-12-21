@@ -120,6 +120,11 @@ wordpress_container_labels_additional_labels: "{{ wordpress_container_labels_add
 wordpress_container_labels_additional_labels_auto: {}
 wordpress_container_labels_additional_labels_custom: {}
 
+# A list of extra arguments to pass to the container (`docker create` command)
+wordpress_container_extra_arguments: "{{ wordpress_container_extra_arguments_auto + wordpress_container_extra_arguments_custom }}"
+wordpress_container_extra_arguments_auto: []
+wordpress_container_extra_arguments_custom: []
+
 # Specifies the value of the `X-XSS-Protection` header
 # Stops pages from loading when they detect reflected cross-site scripting (XSS) attacks.
 #

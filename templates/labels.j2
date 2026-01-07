@@ -61,4 +61,6 @@ traefik.http.routers.{{ wordpress_identifier }}.tls.certResolver={{ wordpress_co
 traefik.http.services.{{ wordpress_identifier }}.loadbalancer.server.port={{ wordpress_container_http_port }}
 {% endif %}
 
-{{ wordpress_container_labels_additional_labels }}
+{% for arg in wordpress_container_labels_additional_labels %}
+{{ arg }}
+{% endfor %}

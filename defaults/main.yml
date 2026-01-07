@@ -114,11 +114,11 @@ wordpress_container_labels_traefik_additional_response_headers_custom: {}
 #
 # Example:
 # wordpress_container_labels_additional_labels_custom: |
-#   my.label=1
-#   another.label="here"
-wordpress_container_labels_additional_labels: "{{ wordpress_container_labels_additional_labels_auto | combine(wordpress_container_labels_additional_labels_custom) }}"
-wordpress_container_labels_additional_labels_auto: {}
-wordpress_container_labels_additional_labels_custom: {}
+#   - my.label=1
+#   - another.label="here"
+wordpress_container_labels_additional_labels: "{{ wordpress_container_labels_additional_labels_auto + wordpress_container_labels_additional_labels_custom }}"
+wordpress_container_labels_additional_labels_auto: []
+wordpress_container_labels_additional_labels_custom: []
 
 # A list of extra arguments to pass to the container (`docker create` command)
 wordpress_container_extra_arguments: "{{ wordpress_container_extra_arguments_auto + wordpress_container_extra_arguments_custom }}"

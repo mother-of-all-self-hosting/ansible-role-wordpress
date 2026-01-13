@@ -48,7 +48,7 @@ wordpress_container_image_self_build_src_files_path: "{{ wordpress_base_path }}/
 wordpress_container_http_host_bind_port: ""
 
 # The base container network. It will be auto-created by this role if it doesn't exist already.
-wordpress_container_network: '{{ wordpress_identifier }}'
+wordpress_container_network: "{{ wordpress_identifier }}"
 
 # The port number in the container
 wordpress_container_http_port: 80

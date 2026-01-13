@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 ---
-- name: Ensure WordPress path exists
+- name: Ensure WordPress paths exist
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -14,15 +14,6 @@
     group: "{{ wordpress_gid }}"
   with_items:
     - "{{ wordpress_base_path }}"
-
-- name: Ensure WordPress data path exists
-  ansible.builtin.file:
-    path: "{{ item }}"
-    state: directory
-    mode: "0750"
-    owner: "{{ wordpress_uid }}"
-    group: "{{ wordpress_gid }}"
-  with_items:
     - "{{ wordpress_data_path }}"
 
 - name: Ensure WordPress support files installed

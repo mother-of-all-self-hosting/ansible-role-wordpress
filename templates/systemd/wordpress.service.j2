@@ -38,8 +38,8 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       {% for volume in wordpress_container_additional_volumes %}
       --mount type={{ volume.type | default('bind' if '/' in volume.src else 'volume') }},src={{ volume.src }},dst={{ volume.dst }}{{ (',' + volume.options) if volume.options else '' }} \
       {% endfor %}
-      --tmpfs=/tmp:rw,noexec,nosuid,size=100m \
-      --tmpfs=/var/run/apache2:rw,noexec,nosuid,size=100m \
+      --tmpfs=/tmp:rw,noexec,nosuid,size={{ wordpress_container_tmpfs_tmp_size }} \
+      --tmpfs=/var/run/apache2:rw,noexec,nosuid,size={{ wordpress_container_tmpfs_run_size }} \
       {% for arg in wordpress_container_extra_arguments %}
       {{ arg }} \
       {% endfor %}

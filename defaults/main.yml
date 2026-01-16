@@ -122,6 +122,12 @@ wordpress_container_labels_additional_labels: "{{ wordpress_container_labels_add
 wordpress_container_labels_additional_labels_auto: []
 wordpress_container_labels_additional_labels_custom: []
 
+# Specify the size of the container's tmpfs volume (/tmp)
+wordpress_container_tmpfs_tmp_size: 128m
+
+# Specify the size of the container's tmpfs volume (/var/run/apache2)
+wordpress_container_tmpfs_run_size: 128m
+
 # A list of extra arguments to pass to the container (`docker create` command)
 wordpress_container_extra_arguments: "{{ wordpress_container_extra_arguments_auto + wordpress_container_extra_arguments_custom }}"
 wordpress_container_extra_arguments_auto: []

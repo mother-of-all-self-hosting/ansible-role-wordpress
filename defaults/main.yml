@@ -206,12 +206,21 @@ wordpress_database_password: ""
 # Set to 1 to enable debug mode (!security risk!)
 wordpress_debug: 0
 
+# Additional variables for uploads.ini file mounted on the container.
+wordpress_uploads_ini_additional_variables: ""
+
 # Specify the timezone
 wordpress_environment_variables_tz: UTC
 
-# Additional environment variables to pass to the WordPress container.
-# You can use this to further influence the default configuration.
+# Additional environment variables.
 wordpress_environment_variables_additional_variables: ""
 
-# Additional variables for uploads.ini file mounted on the container.
-wordpress_uploads_ini_additional_variables: ""
+# wordpress_restart_necessary controls whether the WordPress systemd
+# service will be restarted (when true) or merely started (when false) by the
+# systemd service manager role (when conditional restart is enabled).
+#
+# This value is automatically computed during installation based on whether
+# any configuration files, the systemd service file, or the container image changed.
+# The default of `false` means "no restart needed" — appropriate when the role's
+# installation tasks haven't run (e.g., due to --tags skipping them).
+wordpress_restart_necessary: false

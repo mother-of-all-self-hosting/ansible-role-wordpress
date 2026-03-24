@@ -229,7 +229,6 @@ wordpress_container_cleanup_command: |
 wordpress_max_upload_size: '64M'
 
 wordpress_database_hostname: ""
-wordpress_database_port: 3306
 wordpress_database_name: wordpress
 wordpress_database_username: wordpress
 wordpress_database_password: ""

@@ -22,9 +22,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 This is an [Ansible](https://www.ansible.com/) role which installs [WordPress](https://wordpress.org/) to run as a [Docker](https://www.docker.com/) container wrapped in a systemd service.
 
-WordPress is a leading open-source web analytics platform that gives you full data ownership.
+Wordpress is a web content management system.
 
-See the project's [documentation](https://wordpress.org/guides/) to learn what WordPress does and why it might be useful to you.
+See the project's [documentation](https://codex.wordpress.org/Main_Page/) to learn what Wordpress does and why it might be useful to you.
 
 ## Prerequisites
 
@@ -94,6 +94,14 @@ If TCP connection is preferred, connection via the Unix socket can be disabled b
 wordpress_database_socket_enabled: false
 
 wordpress_database_hostname: YOUR_MYSQL_SERVER_HOSTNAME_HERE
+```
+
+### Adjusting upload size limit
+
+By default the size limit of uploaded files is set to `64M`. It is possible to adjust it by adding the following configuration to your `vars.yml` file:
+
+```yaml
+wordpress_max_upload_size: UPLOAD_SIZE_LIMIT_HERE
 ```
 
 ### Extending the configuration

@@ -1,9 +1,9 @@
-# SPDX-FileCopyrightText: 2023 - 2024 Nikita Chernyi
-# SPDX-FileCopyrightText: 2023 - 2025 Slavi Pantaleev
+# SPDX-FileCopyrightText: 2023, 2024 Nikita Chernyi
+# SPDX-FileCopyrightText: 2023-2025 Slavi Pantaleev
 # SPDX-FileCopyrightText: 2024 Julian-Samuel Gebühr
 # SPDX-FileCopyrightText: 2024 Sergio Durigan Junior
 # SPDX-FileCopyrightText: 2025 MASH project contributors
-# SPDX-FileCopyrightText: 2025 Suguru Hirahara
+# SPDX-FileCopyrightText: 2025, 2026 Suguru Hirahara
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -226,12 +226,37 @@ wordpress_container_cleanup_command: |
   echo "Failed to remove stale container {{ wordpress_identifier }} after {{ wordpress_container_cleanup_timeout_seconds }} attempts" >&2;
   exit 1
 
-wordpress_max_upload_size: '64M'
+########################################################################
+#                                                                      #
+# database                                                             #
+#                                                                      #
+########################################################################
 
+# Specify database configuration
 wordpress_database_hostname: ""
-wordpress_database_name: wordpress
 wordpress_database_username: wordpress
 wordpress_database_password: ""
+wordpress_database_name: wordpress
+
+# Control if the database connection to MySQL is made via a Unix socket
+wordpress_database_socket_enabled: true
+
+# Specify the path to the MySQL Unix socket path inside the WordPress container
+wordpress_database_socket_path_container: /run-mysqld
+
+# Specify the path to the MySQL Unix socket path on the host (bind-mount source)
+wordpress_database_socket_path_host: ""
+
+# Specify database host address and port or absolute path for Unix socket
+wordpress_database_host: "{{ 'localhost:' + wordpress_database_socket_path_container + '/mysqld.sock' if wordpress_database_socket_enabled else wordpress_database_hostname }}"
+
+########################################################################
+#                                                                      #
+# /database                                                            #
+#                                                                      #
+########################################################################
+
+wordpress_max_upload_size: '64M'
 
 # Set to 1 to enable debug mode (!security risk!)
 wordpress_debug: 0

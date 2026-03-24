@@ -18,62 +18,62 @@ SPDX-FileCopyrightText: 2024-2026 Suguru Hirahara
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
-# Setting up Matomo
+# Setting up WordPress
 
-This is an [Ansible](https://www.ansible.com/) role which installs [Matomo](https://matomo.org/) to run as a [Docker](https://www.docker.com/) container wrapped in a systemd service.
+This is an [Ansible](https://www.ansible.com/) role which installs [WordPress](https://wordpress.org/) to run as a [Docker](https://www.docker.com/) container wrapped in a systemd service.
 
-Matomo is a leading open-source web analytics platform that gives you full data ownership.
+WordPress is a leading open-source web analytics platform that gives you full data ownership.
 
-See the project's [documentation](https://matomo.org/guides/) to learn what Matomo does and why it might be useful to you.
+See the project's [documentation](https://wordpress.org/guides/) to learn what WordPress does and why it might be useful to you.
 
 ## Prerequisites
 
-To run a Matomo instance it is necessary to prepare a [MySQL](https://www.mysql.com/) compatible database server.
+To run a WordPress instance it is necessary to prepare a [MySQL](https://www.mysql.com/) compatible database server.
 
 If you are looking for an Ansible role for [MariaDB](https://mariadb.org/), you can check out [this role (ansible-role-mariadb)](https://github.com/mother-of-all-self-hosting/ansible-role-mariadb) maintained by the [Mother-of-All-Self-Hosting (MASH)](https://github.com/mother-of-all-self-hosting) team.
 
 ## Adjusting the playbook configuration
 
-To enable Matomo with this role, add the following configuration to your `vars.yml` file.
+To enable WordPress with this role, add the following configuration to your `vars.yml` file.
 
 **Note**: the path should be something like `inventory/host_vars/mash.example.com/vars.yml` if you use the [MASH Ansible playbook](https://github.com/mother-of-all-self-hosting/mash-playbook).
 
 ```yaml
 ########################################################################
 #                                                                      #
-# matomo                                                               #
+# wordpress                                                            #
 #                                                                      #
 ########################################################################
 
-matomo_enabled: true
+wordpress_enabled: true
 
 ########################################################################
 #                                                                      #
-# /matomo                                                              #
+# /wordpress                                                           #
 #                                                                      #
 ########################################################################
 ```
 
 ### Set the hostname
 
-To enable Matomo you need to set the hostname as well. To do so, add the following configuration to your `vars.yml` file. Make sure to replace `example.com` with your own value.
+To enable WordPress you need to set the hostname as well. To do so, add the following configuration to your `vars.yml` file. Make sure to replace `example.com` with your own value.
 
 ```yaml
-matomo_hostname: "example.com"
+wordpress_hostname: "example.com"
 ```
 
 After adjusting the hostname, make sure to adjust your DNS records to point the domain to your server.
 
-**Note**: hosting Matomo under a subpath (by configuring the `matomo_path_prefix` variable) does not seem to be possible due to Matomo's technical limitations.
+**Note**: hosting WordPress under a subpath (by configuring the `wordpress_path_prefix` variable) does not seem to be possible due to WordPress's technical limitations.
 
 ### Set variables for connecting to a MySQL-compatible database server
 
-To have the Matomo instance connect to your MySQL-compatible database server, add the following configuration to your `vars.yml` file.
+To have the WordPress instance connect to your MySQL-compatible database server, add the following configuration to your `vars.yml` file.
 
 ```yaml
-matomo_database_username: YOUR_MYSQL_SERVER_USERNAME_HERE
-matomo_database_password: YOUR_MYSQL_SERVER_PASSWORD_HERE
-matomo_database_name: YOUR_MYSQL_SERVER_DATABASE_NAME_HERE
+wordpress_database_username: YOUR_MYSQL_SERVER_USERNAME_HERE
+wordpress_database_password: YOUR_MYSQL_SERVER_PASSWORD_HERE
+wordpress_database_name: YOUR_MYSQL_SERVER_DATABASE_NAME_HERE
 ```
 
 ### Configuring connection to the database server (optional)
@@ -82,7 +82,7 @@ By default the role is configured to establish connection with the the database 
 
 ```yaml
 # Specify the path to the the database Unix socket path on the host (bind-mount source)
-matomo_database_socket_path_host: ""
+wordpress_database_socket_path_host: ""
 ```
 
 Setting it enables to connect to the the database server via Unix socket mounted in the container at `/run-mysqld/mysqld.sock`.
@@ -91,9 +91,9 @@ If TCP connection is preferred, connection via the Unix socket can be disabled b
 
 ```yaml
 # Disable the connection to the database server via a Unix socket
-matomo_database_socket_enabled: false
+wordpress_database_socket_enabled: false
 
-matomo_database_hostname: YOUR_MYSQL_SERVER_HOSTNAME_HERE
+wordpress_database_hostname: YOUR_MYSQL_SERVER_HOSTNAME_HERE
 ```
 
 ### Extending the configuration
@@ -102,9 +102,9 @@ There are some additional things you may wish to configure about the service.
 
 Take a look at:
 
-- [`defaults/main.yml`](../defaults/main.yml) for some variables that you can customize via your `vars.yml` file. You can override settings (even those that don't have dedicated playbook variables) using the `matomo_environment_variables_additional_variables` variable
+- [`defaults/main.yml`](../defaults/main.yml) for some variables that you can customize via your `vars.yml` file. You can override settings (even those that don't have dedicated playbook variables) using the `wordpress_environment_variables_additional_variables` variable
 
-See [the image's documentation](https://hub.docker.com/_/matomo/#matomo-installation) for a complete list of Matomo's config options that you could put in `matomo_environment_variables_additional_variables`.
+See [the image's documentation](https://hub.docker.com/_/wordpress/#wordpress-installation) for a complete list of WordPress's config options that you could put in `wordpress_environment_variables_additional_variables`.
 
 ## Installing
 
@@ -118,7 +118,7 @@ If you use the MASH playbook, the shortcut commands with the [`just` program](ht
 
 ## Usage
 
-After running the command for installation, Matomo becomes available at the specified hostname like `https://example.com`.
+After running the command for installation, WordPress becomes available at the specified hostname like `https://example.com`.
 
 To get started, open the URL with a web browser, and follow the set up wizard.
 
@@ -126,4 +126,4 @@ To get started, open the URL with a web browser, and follow the set up wizard.
 
 ### Check the service's logs
 
-You can find the logs in [systemd-journald](https://www.freedesktop.org/software/systemd/man/systemd-journald.service.html) by logging in to the server with SSH and running `journalctl -fu matomo` (or how you/your playbook named the service, e.g. `mash-matomo`).
+You can find the logs in [systemd-journald](https://www.freedesktop.org/software/systemd/man/systemd-journald.service.html) by logging in to the server with SSH and running `journalctl -fu wordpress` (or how you/your playbook named the service, e.g. `mash-wordpress`).

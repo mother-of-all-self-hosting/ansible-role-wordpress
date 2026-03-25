@@ -30,7 +30,6 @@
     - { "name": "wordpress_path_prefix", when: true }
     - { "name": "wordpress_container_network", when: true }
     - { "name": "wordpress_database_hostname", when: "{{ not wordpress_database_socket_enabled }}" }
-    - { "name": "wordpress_database_username", when: true }
     - { "name": "wordpress_database_password", when: true }
     - { "name": "wordpress_database_socket_path_host", when: "{{ wordpress_database_socket_enabled }}" }
 

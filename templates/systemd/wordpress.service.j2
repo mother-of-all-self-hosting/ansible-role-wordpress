@@ -35,7 +35,7 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       --label-file={{ wordpress_base_path }}/labels \
       --mount type=bind,src={{ wordpress_base_path }}/uploads.ini,dst=/usr/local/etc/php/conf.d/uploads.ini \
       --mount type=bind,src={{ wordpress_data_path }},dst=/var/www/html \
-      {% if wordpress_database_socket_enabled %}
+      {% if wordpress_database_socket_enabled and wordpress_database_socket_path_host != '' %}
       --mount type=bind,src={{ wordpress_database_socket_path_host }},dst={{ wordpress_database_socket_path_container }} \
       {% endif %}
       {% for volume in wordpress_container_additional_volumes %}

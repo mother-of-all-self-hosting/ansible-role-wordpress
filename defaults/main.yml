@@ -248,7 +248,7 @@ wordpress_database_socket_path_container: /run-mysqld
 wordpress_database_socket_path_host: ""
 
 # Specify database host address and port or absolute path for Unix socket
-wordpress_database_host: "{{ 'localhost:' + wordpress_database_socket_path_container + '/mysqld.sock' if wordpress_database_socket_enabled else wordpress_database_hostname }}"
+wordpress_environment_variables_db_host: "{{ 'localhost:' + wordpress_database_socket_path_container + '/mysqld.sock' if wordpress_database_socket_enabled else wordpress_database_hostname }}"
 
 ########################################################################
 #                                                                      #

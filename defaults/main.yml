@@ -35,7 +35,6 @@ wordpress_container_image_tag: "{{ wordpress_version }}"
 wordpress_container_image_registry_prefix: "{{ wordpress_container_image_registry_prefix_upstream }}"
 wordpress_container_image_registry_prefix_upstream: "{{ wordpress_container_image_registry_prefix_upstream_default }}"
 wordpress_container_image_registry_prefix_upstream_default: docker.io/
-wordpress_container_image_force_pull: "{{ wordpress_container_image.endswith(':latest') }}"
 
 wordpress_container_image_self_build: false
 wordpress_container_image_self_build_name: "docker-library/wordpress:{{ wordpress_container_image_self_build_repo_version }}"

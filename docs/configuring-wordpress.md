@@ -22,9 +22,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 This is an [Ansible](https://www.ansible.com/) role which installs [WordPress](https://wordpress.org/) to run as a [Docker](https://www.docker.com/) container wrapped in a systemd service.
 
-Wordpress is a web content management system.
+WordPress is a web content management system.
 
-See the project's [documentation](https://codex.wordpress.org/Main_Page/) to learn what Wordpress does and why it might be useful to you.
+See the project's [documentation](https://codex.wordpress.org/Main_Page/) to learn what WordPress does and why it might be useful to you.
 
 ## Prerequisites
 

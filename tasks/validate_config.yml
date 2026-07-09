@@ -15,6 +15,8 @@
     - { "old": "wordpress_env_path", "new": "<Removed>" }
     - { "old": "wordpress_config_path", "new": "<Removed>" }
     - { "old": "wordpress_uploads_config_location", "new": "<Removed>" }
+    - { "old": "wordpress_container_labels_middleware_basic_auth_enabled", "new": "wordpress_container_labels_traefik_middleware_basic_auth_enabled" }
+    - { "old": "wordpress_container_labels_middleware_basic_auth_users", "new": "wordpress_container_labels_traefik_middleware_basic_auth_users" }
     - { "old": "wordpress_environment_variables_extension", "new": "wordpress_environment_variables_additional_variables" }
     - { "old": "wordpress_http_header_content_permission_policy", "new": "wordpress_http_header_permissions_policy" }
     - { "old": "wordpress_container_image_force_pull", "new": "<removed> (the new community.docker.docker_image_pull module handles this natively)" }
@@ -45,7 +47,7 @@
       with_items:
         - { "name": "wordpress_container_labels_traefik_hostname", when: true }
         - { "name": "wordpress_container_labels_traefik_path_prefix", when: true }
-        - { "name": "wordpress_container_labels_middleware_basic_auth_users", when: "{{ wordpress_container_labels_middleware_basic_auth_enabled }}" }
+        - { "name": "wordpress_container_labels_traefik_middleware_basic_auth_users", when: "{{ wordpress_container_labels_traefik_middleware_basic_auth_enabled }}" }
 
     # We ensure it doesn't end with a slash, because we handle both (slash and no-slash).
     # Knowing that `wordpress_container_labels_traefik_path_prefix` does not end with a slash

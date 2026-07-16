@@ -1,0 +1,47 @@
+# SPDX-FileCopyrightText: 2026 Suguru Hirahara
+# SPDX-FileCopyrightText: 2026 spatterlight
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+---
+- name: Verify WordPress systemd service
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: Wait for WordPress service to become active (up to 180s)
+      ansible.builtin.systemd:
+        name: wordpress.service
+      register: wordpress_service
+      until: wordpress_service.status.ActiveState == 'active'
+      retries: 36
+      delay: 5
+
+    - name: Assert WordPress service is active
+      ansible.builtin.assert:
+        that: wordpress_service.status.ActiveState == 'active'
+        fail_msg: "wordpress.service not active ({{ wordpress_service.status.ActiveState }})"
+        success_msg: "wordpress.service is active"
+
+    - name: Wait for WordPress HTTP endpoint to respond (up to 10m)
+      ansible.builtin.uri:
+        url: "http://localhost:80"
+        method: GET
+        status_code: [200, 302, 307]
+        follow_redirects: none
+      register: wordpress_endpoint
+      until: wordpress_endpoint.status in [200, 302, 307]
+      retries: 120
+      delay: 5
+
+    - name: Assert WordPress HTTP endpoint responds
+      ansible.builtin.assert:
+        that: wordpress_endpoint.status in [200, 302, 307]
+        fail_msg: "WordPress did not respond as expected ({{ wordpress_endpoint.status | default('no response') }})"
+        success_msg: "WordPress responded with {{ wordpress_endpoint.status }}"
+
+    - name: Show WordPress systemd service status summary
+      ansible.builtin.debug:
+        msg:
+          - "WordPress systemd: {{ wordpress_service.status.ActiveState }}"
+          - "WordPress HTTP: {{ wordpress_endpoint.status }}"

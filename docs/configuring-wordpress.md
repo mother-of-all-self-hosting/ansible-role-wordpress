@@ -32,6 +32,9 @@ To run a WordPress instance it is necessary to prepare a [MySQL](https://www.mys
 
 If you are looking for an Ansible role for [MariaDB](https://mariadb.org/), you can check out [this role (ansible-role-mariadb)](https://github.com/mother-of-all-self-hosting/ansible-role-mariadb) maintained by the [Mother-of-All-Self-Hosting (MASH)](https://github.com/mother-of-all-self-hosting) team.
 
+>[!NOTE]
+> Before proceeding, please make sure the compatible MySQL/MariaDB version at [this section](https://make.wordpress.org/hosting/handbook/compatibility/#wordpress-php-mysql-mariadb-versions) on the official documentation. **The latest version is not always supported by WordPress.**
+
 ## Adjusting the playbook configuration
 
 To enable WordPress with this role, add the following configuration to your `vars.yml` file.

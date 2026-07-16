@@ -1,0 +1,84 @@
+# SPDX-FileCopyrightText: 2026 Suguru Hirahara
+# SPDX-FileCopyrightText: 2026 spatterlight
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+driver:
+  name: docker
+platforms:
+  - name: wordpress-${MOLECULE_DISTRO:-ubuntu2604}-default
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2604}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      callback_result_format: yaml
+  inventory:
+    group_vars:
+      all:
+        # Variables for WordPress
+        wordpress_uid: 1000
+        wordpress_gid: 1000
+        wordpress_hostname: wordpress
+        wordpress_container_labels_traefik_enabled: false
+        wordpress_container_http_host_bind_port: 80
+
+        # Variables required for WordPress to connect to the MariaDB database (via Unix socket)
+        wordpress_database_username: my_database_username
+        wordpress_database_password: my_database_password
+        wordpress_database_name: wordpress
+        wordpress_database_socket_enabled: true
+        wordpress_database_socket_path_host: "{{ mariadb_run_path }}"
+        wordpress_systemd_required_services_list_auto: |
+          {{
+            (['mariadb.service'])
+          }}
+
+        # Variables for MariaDB
+        mariadb_uid: 1000
+        mariadb_gid: 1000
+        mariadb_root_password: mariadb_password
+        mariadb_container_unix_socket_enabled: true
+        mariadb_managed_databases: |
+          {{
+            [{
+              'name': wordpress_database_name,
+              'username': wordpress_database_username,
+              'password': wordpress_database_password,
+            }]
+          }}
+
+        # See: https://make.wordpress.org/hosting/handbook/compatibility/#wordpress-php-mysql-mariadb-versions
+        mariadb_container_image_latest: "{{ mariadb_container_image_v11_4 }}"
+  env:
+    # Workaround for https://github.com/ansible/molecule/issues/4391
+    ANSIBLE_ROLES_PATH: ${MOLECULE_PROJECT_DIRECTORY}/..:/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:~/.ansible/roles
+scenario:
+  # See: https://docs.ansible.com/projects/molecule/configuration/?h=test_sequence#scenario
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    # Disable idempotence test for now due to ansible-role-mariadb
+    # - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy
+verifier:
+  name: ansible

@@ -23,6 +23,12 @@
         fail_msg: "wordpress.service not active ({{ wordpress_service.status.ActiveState }})"
         success_msg: "wordpress.service is active"
 
+    - name: Retrieve WordPress service log for debugging
+      when: wordpress_debug_service_enabled | bool
+      ansible.builtin.command:
+        cmd: journalctl -xeu wordpress.service
+      changed_when: false
+
     - name: Wait for WordPress HTTP endpoint to respond (up to 10m)
       ansible.builtin.uri:
         url: "http://localhost:80"

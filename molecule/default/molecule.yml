@@ -27,6 +27,9 @@ provisioner:
   inventory:
     group_vars:
       all:
+        # Helper variables
+        wordpress_debug_service_enabled: false
+
         # Variables for WordPress
         wordpress_uid: 1000
         wordpress_gid: 1000

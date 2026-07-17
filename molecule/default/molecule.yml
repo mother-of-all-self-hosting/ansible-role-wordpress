@@ -33,7 +33,7 @@ provisioner:
         # Variables for WordPress
         wordpress_uid: 1000
         wordpress_gid: 1000
-        wordpress_hostname: wordpress
+        wordpress_hostname: localhost
         wordpress_container_labels_traefik_enabled: false
         wordpress_container_http_host_bind_port: 80
 

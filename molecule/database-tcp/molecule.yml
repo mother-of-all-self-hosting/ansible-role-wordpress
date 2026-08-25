@@ -1,0 +1,139 @@
+# SPDX-FileCopyrightText: 2026 Slavi Pantaleev
+# SPDX-FileCopyrightText: 2026 spatterlight
+# SPDX-FileCopyrightText: 2026 Suguru Hirahara
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+    force: true
+driver:
+  name: docker
+platforms:
+  - name: wordpress-${MOLECULE_DISTRO:-ubuntu2604}-database-tcp
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2604}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      callback_result_format: yaml
+  inventory:
+    group_vars:
+      all:
+        # Helper variables
+        wordpress_debug_service_enabled: false
+
+        # Where the role puts the WordPress files. Pinned here to what the role
+        # derives it to, because the verification writes its PHP probe into it
+        # and cannot read a Jinja-derived default out of the role.
+        wordpress_data_path: /wordpress/data
+
+        # Where the verification reaches WordPress. The published host port is
+        # deliberately neither the port WordPress listens on nor the one the
+        # `default` scenario uses.
+        wordpress_molecule_url: http://127.0.0.1:8091
+
+        # Values the verification asserts its way back to. None of them is a
+        # default of the role or of WordPress, and none of them is what the
+        # `default` scenario uses, so a scenario reading the other scenario's
+        # state would show up as a failure rather than as a pass.
+        wordpress_molecule_table_prefix: mash_tcp_
+        wordpress_molecule_site_title: MASH Molecule TCP Probe a904
+        wordpress_molecule_admin_username: molecule_admin_a904
+        wordpress_molecule_admin_password: Molecule-Probe-a904-Passphrase
+        wordpress_molecule_admin_email: molecule-a904@example.com
+
+        # Variables for WordPress
+        wordpress_uid: 1000
+        wordpress_gid: 1000
+        wordpress_hostname: localhost
+        wordpress_container_labels_traefik_enabled: false
+
+        # Not 80. The container image hardcodes `Listen 80` and
+        # `<VirtualHost *:80>`, so this only works because the role renders and
+        # mounts its own Apache configuration over the image's. Publishing it on
+        # yet another port on the host keeps the two sides distinguishable.
+        wordpress_container_http_port: 8080
+        wordpress_container_http_host_bind_port: 127.0.0.1:8091
+
+        # Neither WordPress's default (2M) nor the role's (64M).
+        wordpress_max_upload_size: 29M
+
+        # Not the role's default (UTC).
+        wordpress_environment_variables_tz: Pacific/Chatham
+
+        # Passed through by the role into the container environment. WordPress
+        # prefixes every one of its tables with this, so the verification can
+        # tell DB-side whether the pass-through worked. WordPress's own default
+        # prefix is `wp_`.
+        wordpress_environment_variables_additional_variables: |
+          WORDPRESS_TABLE_PREFIX={{ wordpress_molecule_table_prefix }}
+
+        # Variables required for WordPress to connect to the MariaDB database over TCP.
+        #
+        # This is the point of this scenario: the `default` one reaches MariaDB
+        # over the Unix socket the role bind-mounts, and a WordPress that quietly
+        # kept doing that would pass a verification that only looked at whether
+        # the site works.
+        wordpress_database_socket_enabled: false
+        # ansible-role-mariadb derives this from `mariadb_identifier`; spelled out
+        # because the verification reads it, and Jinja-derived defaults of another
+        # role are not resolvable there.
+        wordpress_database_hostname: mariadb
+        wordpress_container_additional_networks_custom: ["{{ mariadb_container_network }}"]
+        wordpress_database_username: wordpress_tcp_user
+        wordpress_database_password: wordpress-tcp-password-a904
+        # Not `wordpress`, which is what the role defaults to.
+        wordpress_database_name: wordpress_tcp_db
+        wordpress_systemd_required_services_list_auto: |
+          {{
+            (['mariadb.service'])
+          }}
+
+        # Variables for MariaDB
+        mariadb_uid: 1000
+        mariadb_gid: 1000
+        mariadb_root_password: mariadb_password
+        # There is no socket for WordPress to fall back to in this scenario.
+        mariadb_container_unix_socket_enabled: false
+        mariadb_managed_databases_custom: |
+          {{
+            [{
+              'name': wordpress_database_name,
+              'username': wordpress_database_username,
+              'password': wordpress_database_password,
+            }]
+          }}
+
+        # See: https://make.wordpress.org/hosting/handbook/compatibility/#wordpress-php-mysql-mariadb-versions
+        mariadb_container_image_latest: "{{ mariadb_container_image_v11_4 }}"
+  env:
+    # Workaround for https://github.com/ansible/molecule/issues/4391
+    ANSIBLE_ROLES_PATH: ${MOLECULE_PROJECT_DIRECTORY}/..:/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:~/.ansible/roles
+scenario:
+  # See: https://docs.ansible.com/projects/molecule/configuration/?h=test_sequence#scenario
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    # Disable idempotence test for now due to ansible-role-mariadb
+    # - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy
+verifier:
+  name: ansible

@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2020 Chris van Dijk
 SPDX-FileCopyrightText: 2020 Dominik Zajac
 SPDX-FileCopyrightText: 2020 Mickaël Cornière
 SPDX-FileCopyrightText: 2020-2024 MDAD project contributors
-SPDX-FileCopyrightText: 2020-2024 Slavi Pantaleev
+SPDX-FileCopyrightText: 2020-2024, 2026 Slavi Pantaleev
 SPDX-FileCopyrightText: 2022 François Darveau
 SPDX-FileCopyrightText: 2022 Julian Foad
 SPDX-FileCopyrightText: 2022 Warren Bailey
@@ -134,6 +134,19 @@ If you use the MASH playbook, the shortcut commands with the [`just` program](ht
 After running the command for installation, WordPress becomes available at the specified hostname like `https://example.com`.
 
 To get started, open the URL with a web browser, and follow the set up wizard.
+
+>[!WARNING]
+> Until you complete that wizard, the instance has no administrator, and WordPress offers its installer to **anyone** who reaches the hostname — every path redirects to `/wp-admin/install.php`, and whoever submits the form first becomes the administrator of your site. Complete the wizard right after installing, before the hostname is announced or discovered.
+>
+> If you cannot do that immediately, keep the installer to yourself in the meantime by putting the reverse proxy's basic authentication in front of it:
+>
+> ```yaml
+> wordpress_container_labels_traefik_middleware_basic_auth_enabled: true
+> # Generate the value with: htpasswd -nB YOUR_USERNAME_HERE
+> wordpress_container_labels_traefik_middleware_basic_auth_users: YOUR_HTPASSWD_LINE_HERE
+> ```
+>
+> Remove those two settings once the wizard is done, unless you would like to keep the whole site behind basic authentication.
 
 ## Troubleshooting
 

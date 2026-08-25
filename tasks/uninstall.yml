@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2024 Julian-Samuel Gebühr
-# SPDX-FileCopyrightText: 2024 Slavi Pantaleev
+# SPDX-FileCopyrightText: 2024, 2026 Slavi Pantaleev
 # SPDX-FileCopyrightText: 2025 Suguru Hirahara
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
@@ -30,6 +30,8 @@
         path: "{{ wordpress_base_path }}/{{ item }}"
         state: absent
       with_items:
+        - apache-ports.conf
+        - apache-vhost.conf
         - env
         - labels
         - uploads.ini

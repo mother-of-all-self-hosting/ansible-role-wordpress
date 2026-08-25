@@ -1,0 +1,26 @@
+{#
+SPDX-FileCopyrightText: 2026 Slavi Pantaleev
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+#}
+{#
+  Replaces /etc/apache2/ports.conf in the container image.
+
+  The image hardcodes `Listen 80` there and `<VirtualHost *:80>` in
+  /etc/apache2/sites-available/000-default.conf, so without these two files
+  `wordpress_container_http_port` would only rename the port in the Traefik
+  label and in the host port publishing - the process would keep listening on
+  80 and the service would be unreachable.
+
+  Kept deliberately close to the image's own file, so that the default
+  (`wordpress_container_http_port: 80`) behaves exactly as it did before.
+#}
+Listen {{ wordpress_container_http_port }}
+
+<IfModule ssl_module>
+	Listen 443
+</IfModule>
+
+<IfModule mod_gnutls.c>
+	Listen 443
+</IfModule>

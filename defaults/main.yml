@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2023, 2024 Nikita Chernyi
-# SPDX-FileCopyrightText: 2023-2025 Slavi Pantaleev
+# SPDX-FileCopyrightText: 2023-2026 Slavi Pantaleev
 # SPDX-FileCopyrightText: 2024 Julian-Samuel Gebühr
 # SPDX-FileCopyrightText: 2024 Sergio Durigan Junior
 # SPDX-FileCopyrightText: 2025 MASH project contributors
@@ -54,7 +54,17 @@ wordpress_container_network_deletion_enabled: true
 # Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:2586"), or empty string to not expose.
 wordpress_container_http_host_bind_port: ""
 
-# The port number in the container
+# The port number that Apache listens on inside the container.
+#
+# The container image hardcodes port 80 (`Listen 80` in /etc/apache2/ports.conf
+# and `<VirtualHost *:80>` in /etc/apache2/sites-available/000-default.conf), so
+# the role renders both of those files from `../templates/apache-ports.conf.j2`
+# and `../templates/apache-vhost.conf.j2` and mounts them over the image's own.
+# Without that, changing this value would only relabel the port for Traefik and
+# for host port publishing, while the process kept listening on 80.
+#
+# This only applies to the Apache-flavoured images, which is what this role runs
+# by default and what the rest of it (e.g. the /var/run/apache2 tmpfs) assumes.
 wordpress_container_http_port: 80
 
 # A list of additional container networks that the container would be connected to.

@@ -23,12 +23,12 @@
     mode: "0640"
     owner: "{{ wordpress_uid }}"
     group: "{{ wordpress_gid }}"
-  with_items:
-    - apache-ports.conf
-    - apache-vhost.conf
-    - env
-    - labels
-    - uploads.ini
+  with_items: >-
+    {{
+      ['env', 'labels', 'uploads.ini']
+      +
+      (['apache-ports.conf', 'apache-vhost.conf'] if wordpress_container_http_port | int != 80 else [])
+    }}
   register: wordpress_support_files_result
 
 - name: Run if self-building of WordPress container image is not enabled

@@ -35,8 +35,16 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       --env-file={{ wordpress_base_path }}/env  \
       --label-file={{ wordpress_base_path }}/labels \
       --mount type=bind,src={{ wordpress_base_path }}/uploads.ini,dst=/usr/local/etc/php/conf.d/uploads.ini \
+      {% if wordpress_container_http_port | int != 80 %}
+      {#
+      The image hardcodes `Listen 80` and `<VirtualHost *:80>`, so a non-default
+      port needs Apache's own configuration replaced. At the default port the
+      image's files are already correct, and mounting over them would change how
+      Apache is configured for every existing deployment to no effect.
+      #}
       --mount type=bind,src={{ wordpress_base_path }}/apache-ports.conf,dst=/etc/apache2/ports.conf,readonly \
       --mount type=bind,src={{ wordpress_base_path }}/apache-vhost.conf,dst=/etc/apache2/sites-available/000-default.conf,readonly \
+      {% endif %}
       --mount type=bind,src={{ wordpress_data_path }},dst=/var/www/html \
       {% if wordpress_database_socket_enabled and wordpress_database_socket_path_host != '' %}
       --mount type=bind,src={{ wordpress_database_socket_path_host }},dst={{ wordpress_database_socket_path_container }} \

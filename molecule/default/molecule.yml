@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2026 Slavi Pantaleev
 # SPDX-FileCopyrightText: 2026 spatterlight
 # SPDX-FileCopyrightText: 2026 Suguru Hirahara
 #
@@ -31,17 +32,51 @@ provisioner:
         # Helper variables
         wordpress_debug_service_enabled: false
 
+        # Where the role puts the WordPress files. Pinned here to what the role
+        # derives it to, because the verification writes its PHP probe into it
+        # and cannot read a Jinja-derived default out of the role.
+        wordpress_data_path: /wordpress/data
+
+        # Where the verification reaches WordPress. The published host port is
+        # deliberately not the port WordPress listens on, so that a mix-up
+        # between the two shows up as a failure.
+        wordpress_molecule_url: http://127.0.0.1:8080
+
+        # Values the verification asserts its way back to. None of them is a
+        # default of the role or of WordPress, so a configuration file that
+        # never reached the process shows up as a failure rather than as a pass.
+        wordpress_molecule_table_prefix: mash_probe_
+        wordpress_molecule_site_title: MASH Molecule Probe 5b1c
+        wordpress_molecule_admin_username: molecule_admin_5b1c
+        wordpress_molecule_admin_password: Molecule-Probe-5b1c-Passphrase
+        wordpress_molecule_admin_email: molecule-5b1c@example.com
+
         # Variables for WordPress
         wordpress_uid: 1000
         wordpress_gid: 1000
         wordpress_hostname: localhost
         wordpress_container_labels_traefik_enabled: false
-        wordpress_container_http_host_bind_port: 80
+        wordpress_container_http_host_bind_port: 127.0.0.1:8080
+
+        # Neither WordPress's default (2M) nor the role's (64M), so that
+        # uploads.ini reaching PHP is distinguishable from it not reaching PHP.
+        wordpress_max_upload_size: 13M
+
+        # Not the role's default (UTC).
+        wordpress_environment_variables_tz: Australia/Adelaide
+
+        # Passed through by the role into the container environment. WordPress
+        # prefixes every one of its tables with this, so the verification can
+        # tell DB-side whether the pass-through worked. WordPress's own default
+        # prefix is `wp_`.
+        wordpress_environment_variables_additional_variables: |
+          WORDPRESS_TABLE_PREFIX={{ wordpress_molecule_table_prefix }}
 
         # Variables required for WordPress to connect to the MariaDB database (via Unix socket)
-        wordpress_database_username: my_database_username
-        wordpress_database_password: my_database_password
-        wordpress_database_name: wordpress
+        wordpress_database_username: wordpress_probe_user
+        wordpress_database_password: wordpress-probe-password-5b1c
+        # Not `wordpress`, which is what the role defaults to.
+        wordpress_database_name: wordpress_probe_db
         wordpress_database_socket_enabled: true
         wordpress_database_socket_path_host: "{{ mariadb_run_path }}"
         wordpress_systemd_required_services_list_auto: |
@@ -54,7 +89,7 @@ provisioner:
         mariadb_gid: 1000
         mariadb_root_password: mariadb_password
         mariadb_container_unix_socket_enabled: true
-        mariadb_managed_databases: |
+        mariadb_managed_databases_custom: |
           {{
             [{
               'name': wordpress_database_name,

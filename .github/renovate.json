@@ -8,6 +8,6 @@
     "`versioning=semver` on the annotation in defaults/main.yml is what keeps that pull request meaningful. Of the 5762 tags docker.io/library/wordpress publishes, strict semver leaves exactly the 116 real releases (3.9.1 through 7.1.0): the 1598 flavour tags (-apache, -fpm, -php8.3-fpm-alpine and so on) parse as prereleases and are skipped as unstable, and the remaining 4048 - the floating `7` and `7.1`, `latest`, `cli`, `beta` - are not versions at all. The floating majors matter: the `v7-0` tag this repository carries was cut when one of them was mistaken for a version."
   ],
   "extends": [
-    "github>mother-of-all-self-hosting/renovate-config#v1.0.0"
+    "github>mother-of-all-self-hosting/renovate-config#v1.1.0"
   ]
 }

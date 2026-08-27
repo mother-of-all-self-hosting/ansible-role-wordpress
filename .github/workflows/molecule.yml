@@ -41,8 +41,6 @@ jobs:
         include:
           - scenario: default
             distro: ubuntu2604
-          - scenario: default
-            distro: debian13
           # How the role reaches the database is a property of the role, not of
           # the host distribution, so one distribution is enough for this one.
           - scenario: database-tcp

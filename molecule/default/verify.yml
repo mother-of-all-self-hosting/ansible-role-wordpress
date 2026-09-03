@@ -62,16 +62,7 @@
       retries: 60
       delay: 5
 
-    # NEGATIVE CONTROL.
-    #
-    # A WordPress that has not been installed answers every path with a 200 or a
-    # 302 - `/`, `/wp-login.php`, `/wp-json/` and even a path that does not exist
-    # all end up at the installer - so "it responded" says nothing at all. What
-    # does say something is *which* answer: a WordPress that cannot reach its
-    # database answers 500 ("Error establishing a database connection"), and one
-    # that can reach it but finds no tables answers exactly this redirect.
-    #
-    # So this assertion is what proves, before anything is installed, that the
+    # This assertion proves that the
     # database the role configured is reachable with the credentials the role
     # configured - and it is also what makes every assertion after the install
     # step meaningful, because it establishes that they could not have passed a

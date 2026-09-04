@@ -118,19 +118,14 @@
     # WordPress carries a two-component version for its `.0` releases (`7.1`),
     # while the container image tags that release `7.1.0`. Compared with a
     # trailing dot so that `7.1` cannot be mistaken for a prefix of `7.10.0`.
-    - name: Assert that the running WordPress is the version the role pins
+    - name: Assert the running WordPress is the version this role installs
       ansible.builtin.assert:
         that:
           - >-
             wordpress_probe.json.wp_version == wordpress_defaults.wordpress_version
             or wordpress_defaults.wordpress_version.startswith(wordpress_probe.json.wp_version ~ '.')
-        fail_msg: >-
-          The running WordPress reports {{ wordpress_probe.json.wp_version }},
-          which is not the {{ wordpress_defaults.wordpress_version }} that
-          wordpress_version in defaults/main.yml asks for.
-        success_msg: >-
-          The running WordPress reports {{ wordpress_probe.json.wp_version }},
-          matching wordpress_version {{ wordpress_defaults.wordpress_version }}
+        fail_msg: "WordPress reports {{ wordpress_probe.json.wp_version | default('none') }}, expected {{ wordpress_defaults.wordpress_version }}"
+        success_msg: "WordPress reports {{ wordpress_probe.json.wp_version }}"
 
     - name: Assert that the role's uploads.ini reached PHP
       ansible.builtin.assert:

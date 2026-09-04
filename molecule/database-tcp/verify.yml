@@ -27,13 +27,13 @@
     wordpress_molecule_dbside_content: dbside-content-a904-c31b6
 
   tasks:
-    # The role describes itself; the scenario tunes itself. Only the leaf
-    # literal that Renovate bumps is read from the role, and it is namespaced so
-    # that the role's defaults cannot outrank this scenario's group_vars.
-    - name: Read the role's defaults
+    # The role is not included in this playbook, so its defaults are not in
+    # scope. Reading defaults/main.yml directly ties the version assertion
+    # below.
+    - name: Load the role defaults
       ansible.builtin.include_vars:
         file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
-        name: wordpress_role_defaults
+        name: wordpress_defaults
 
     - name: Wait for the WordPress systemd service to become active (up to 3m)
       ansible.builtin.systemd:
@@ -170,15 +170,15 @@
       ansible.builtin.assert:
         that:
           - >-
-            wordpress_probe.json.wp_version == wordpress_role_defaults.wordpress_version
-            or wordpress_role_defaults.wordpress_version.startswith(wordpress_probe.json.wp_version ~ '.')
+            wordpress_probe.json.wp_version == wordpress_defaults.wordpress_version
+            or wordpress_defaults.wordpress_version.startswith(wordpress_probe.json.wp_version ~ '.')
         fail_msg: >-
           The running WordPress reports {{ wordpress_probe.json.wp_version }},
-          which is not the {{ wordpress_role_defaults.wordpress_version }} that
+          which is not the {{ wordpress_defaults.wordpress_version }} that
           wordpress_version in defaults/main.yml asks for.
         success_msg: >-
           The running WordPress reports {{ wordpress_probe.json.wp_version }},
-          matching wordpress_version {{ wordpress_role_defaults.wordpress_version }}
+          matching wordpress_version {{ wordpress_defaults.wordpress_version }}
 
     - name: Assert that the role's uploads.ini reached PHP
       ansible.builtin.assert:

@@ -55,7 +55,7 @@
           - /usr/bin/docker
           - inspect
           - wordpress
-      register: wordpress_container_inspect
+      register: wordpress_container_raw
       changed_when: false
 
     # What separates this scenario from `default`. The role can bind-mount a
@@ -64,7 +64,7 @@
     # that mount is what makes the rest of this run evidence about TCP.
     - name: Assert that there is no Unix socket for WordPress to fall back to
       vars:
-        wordpress_container: "{{ wordpress_container_inspect.stdout | from_json | first }}"
+        wordpress_container: "{{ wordpress_container_raw.stdout | from_json | first }}"
         wordpress_container_mounts: "{{ wordpress_container.Mounts | map(attribute='Destination') | list }}"
       ansible.builtin.assert:
         that:
@@ -81,7 +81,7 @@
     # 8080 while the process kept listening on 80.
     - name: Assert that the role configures Apache for the port it was asked for
       vars:
-        wordpress_container: "{{ wordpress_container_inspect.stdout | from_json | first }}"
+        wordpress_container: "{{ wordpress_container_raw.stdout | from_json | first }}"
         wordpress_container_mounts: "{{ wordpress_container.Mounts | map(attribute='Destination') | list }}"
       ansible.builtin.assert:
         that:

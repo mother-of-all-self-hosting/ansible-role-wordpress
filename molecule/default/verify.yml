@@ -60,7 +60,7 @@
     - name: Retrieve the WordPress systemd service log for debugging
       when: wordpress_debug_service_enabled | bool
       ansible.builtin.command:
-        cmd: journalctl -xeu wordpress.service
+        cmd: journalctl --no-pager --output=cat --unit=wordpress.service
       changed_when: false
 
     - name: Wait for WordPress to answer over HTTP (up to 5m)

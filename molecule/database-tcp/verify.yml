@@ -63,10 +63,7 @@
 
     - name: Inspect the WordPress container
       ansible.builtin.command:
-        argv:
-          - /usr/bin/docker
-          - inspect
-          - wordpress
+        cmd: docker inspect wordpress
       register: wordpress_container_raw
       changed_when: false
 

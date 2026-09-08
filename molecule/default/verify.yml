@@ -224,7 +224,7 @@
     - name: Read back the installed site DB-side
       ansible.builtin.command:
         argv:
-          - /usr/bin/docker
+          - docker
           - exec
           - "{{ wordpress_molecule_mariadb_container }}"
           - mariadb
@@ -260,7 +260,7 @@
     - name: Insert a post straight into MariaDB
       ansible.builtin.command:
         argv:
-          - /usr/bin/docker
+          - docker
           - exec
           - "{{ wordpress_molecule_mariadb_container }}"
           - mariadb

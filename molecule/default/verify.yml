@@ -29,6 +29,8 @@
     wordpress_molecule_dbside_content: dbside-content-5b1c-2f7a9
 
   tasks:
+    - name: Verify that WordPress works
+      block:
     # The role is not included in this playbook, so its defaults are not in
     # scope. Reading defaults/main.yml directly ties the version assertion
     # below.
@@ -324,3 +326,19 @@
           wordpress.service is {{ wordpress_service_final.status.ActiveState }}
           after {{ wordpress_service_final.status.NRestarts }} restart(s).
         success_msg: "wordpress.service is active and has never restarted"
+
+      rescue:
+        # Whatever went wrong, the reason is almost always in the systemd service log.
+        - name: Retrieve the WordPress systemd service log
+          ansible.builtin.command:
+            cmd: journalctl --no-pager --output=cat --unit=wordpress.service
+          register: wordpress_service_log
+          changed_when: false
+
+        - name: Show the WordPress systemd service log
+          ansible.builtin.debug:
+            var: wordpress_service_log.stdout_lines
+
+        - name: Fail because verification did not pass
+          ansible.builtin.fail:
+            msg: "WordPress verification failed. The systemd service log is printed above."

@@ -31,6 +31,7 @@ provisioner:
       all:
         # Helper variables
         wordpress_debug_service_enabled: false
+        wordpress_restarts_check_enabled: true
 
         # Where the role puts the WordPress files. Pinned here to what the role
         # derives it to, because the verification writes its PHP probe into it

@@ -32,7 +32,7 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       {% if wordpress_container_http_host_bind_port %}
       -p {{ wordpress_container_http_host_bind_port }}:{{ wordpress_container_http_port }} \
       {% endif %}
-      --env-file={{ wordpress_base_path }}/env  \
+      --env-file={{ wordpress_base_path }}/env \
       --label-file={{ wordpress_base_path }}/labels \
       --mount type=bind,src={{ wordpress_base_path }}/uploads.ini,dst=/usr/local/etc/php/conf.d/uploads.ini \
       {% if wordpress_container_http_port | int != 80 %}

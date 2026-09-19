@@ -57,7 +57,10 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       {% for arg in wordpress_container_extra_arguments %}
       {{ arg }} \
       {% endfor %}
-      {{ wordpress_container_image_self_build_name if wordpress_container_image_self_build else wordpress_container_image }}
+      {{ wordpress_container_image_self_build_name if wordpress_container_image_self_build else wordpress_container_image }} \
+      {% for arg in wordpress_process_extra_arguments %}
+      {{ arg }} \
+      {% endfor %}
 
 {% for network in wordpress_container_additional_networks %}
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network connect {{ network }} {{ wordpress_identifier }}

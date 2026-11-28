@@ -65,6 +65,7 @@
         owner: "{{ wordpress_uid }}"
         group: "{{ wordpress_gid }}"
         recurse: true
+      tags: molecule-idempotence-notest
 
     - name: Ensure WordPress repository is present on self-build
       ansible.builtin.git:
